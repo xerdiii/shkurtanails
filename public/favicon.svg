@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="nail" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E7A9BC"/>
+      <stop offset="1" stop-color="#A8446A"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 3C19.5 3 13 19 13 35.5 13 50 21 61 32 61s19-11 19-25.5C51 19 44.5 3 32 3z" fill="url(#nail)"/>
+  <path d="M24.5 14c-3 5-4.5 11.5-4.5 18" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="3.5" stroke-linecap="round"/>
+</svg>

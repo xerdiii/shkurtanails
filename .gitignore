@@ -1,0 +1,7 @@
+# Build output (run `npm run build` to regenerate)
+dist/
+
+node_modules/
+.claude/
+.DS_Store
+Thumbs.db
