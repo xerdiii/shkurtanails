@@ -255,7 +255,7 @@ ${og ? `<meta property="og:image" content="${site.url}/${og}">\n<meta name="twit
 <link rel="icon" href="${base}favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..500;1,6..96,400..500&family=Jost:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Jost:wght@400;500&display=swap">
 <link rel="stylesheet" href="${base}styles.css">
 <script type="application/ld+json">${jsonLd}</script>
 <script src="${base}app.js" defer></script>
