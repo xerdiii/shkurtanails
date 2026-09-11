@@ -9,22 +9,33 @@ const ICON = {
   video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M10 9.3v5.4l4.6-2.7z" fill="currentColor"/></svg>',
 };
 
+const placeholder = (path, kind, ratio, hint) =>
+  `<div class="ph">${ICON[kind]}<span class="ph-kind">${kind === 'video' ? 'Video' : 'Photo'} · ${ratio.replace('/', ':')}</span><span class="ph-hint">${esc(hint)}</span><code class="ph-file">media/${path}.${kind === 'video' ? 'mp4' : 'jpg'}</code></div>`;
+
 // A photo/video slot: the real file when public/media/<path>.* exists, otherwise a labeled placeholder.
-function slot(ctx, { path, kind = 'photo', ratio = '4/5', hint = '', size, alt = '', eager = false }) {
-  const spec = size || SIZE[ratio] || '';
-  const src = ctx.find(path, kind, { hint, size: spec });
+function slot(ctx, { path, kind = 'photo', ratio = '4/5', hint = '', size, alt = '' }) {
+  const src = ctx.find(path, kind, { hint, size: size || SIZE[ratio] || '' });
   const style = `--ratio:${ratio}`;
 
   if (src && kind === 'photo') {
-    return `<figure class="slot" style="${style}"><img src="${ctx.base}${src}" alt="${esc(alt)}" loading="${eager ? 'eager' : 'lazy'}" decoding="async"${eager ? ' fetchpriority="high"' : ''}></figure>`;
+    return `<figure class="slot" style="${style}"><img src="${ctx.base}${src}" alt="${esc(alt)}" loading="lazy" decoding="async"></figure>`;
   }
   if (src && kind === 'video') {
     const poster = ctx.find(`${path}-poster`, 'photo', {}, false);
     const type = src.endsWith('.webm') ? 'video/webm' : 'video/mp4';
     return `<figure class="slot" style="${style}"><video autoplay muted loop playsinline preload="metadata"${poster ? ` poster="${ctx.base}${poster}"` : ''} aria-label="${esc(alt)}"><source src="${ctx.base}${src}" type="${type}"></video></figure>`;
   }
-  const file = `media/${path}.${kind === 'video' ? 'mp4' : 'jpg'}`;
-  return `<figure class="slot slot--empty" style="${style}" aria-hidden="true"><div class="ph">${ICON[kind]}<span class="ph-kind">${kind === 'video' ? 'Video' : 'Photo'} · ${ratio.replace('/', ':')}</span><span class="ph-hint">${esc(hint)}</span><code class="ph-file">${file}</code></div></figure>`;
+  return `<figure class="slot slot--empty" style="${style}" aria-hidden="true">${placeholder(path, kind, ratio, hint)}</figure>`;
+}
+
+// Hero photograph. Three nested layers keep the transforms apart:
+// figure = parallax, .hero-reveal = entrance mask, .hero-img = hover scale, img = entrance scale / breathing.
+function heroPhoto(ctx, { path, hint, size, alt, cls, priority }) {
+  const src = ctx.find(path, 'photo', { hint, size });
+  const inner = src
+    ? `<img src="${ctx.base}${src}" alt="${esc(alt)}" ${priority ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} decoding="async">`
+    : placeholder(path, 'photo', '4/5', hint);
+  return `<figure class="${cls}${src ? '' : ' is-empty'}"${src ? '' : ' aria-hidden="true"'}><div class="hero-reveal"><div class="hero-img">${inner}</div></div></figure>`;
 }
 
 export function renderPage(ctx) {
@@ -44,7 +55,7 @@ export function renderPage(ctx) {
 
   const logo = ctx.find('logo', 'photo', { hint: 'Logo: SVG or transparent PNG', size: '2000px wide+', suggest: 'svg' });
   const og = ctx.find('og-image', 'photo', { hint: 'Share preview for WhatsApp / Instagram / Google', size: '1200×630' });
-  const brand = logo
+  const footerBrand = logo
     ? `<img src="${base}${logo}" alt="${esc(site.name)}">`
     : '<span class="logo-word">Shkurta</span><span class="logo-sub">Nails</span>';
 
@@ -74,37 +85,50 @@ export function renderPage(ctx) {
     makesOffer: services.map((sv) => ({ '@type': 'Offer', price: sv.price, priceCurrency: 'EUR', itemOffered: { '@type': 'Service', name: L(sv.name) } })),
   }).replace(/</g, '\\u003c');
 
-  const heroIsVideo = Boolean(ctx.find(media.hero.path, 'video', {}, false));
-
+  const n = t.nav;
   const header = `
-<header class="header">
-  <div class="wrap header-inner">
-    <a class="logo" href="${home}" aria-label="${esc(site.name)}">${brand}</a>
-    <nav class="nav" aria-label="${esc(t.nav.label)}">
-      <a href="#services">${t.nav.services}</a>
-      <a href="#work">${t.nav.work}</a>
-      <a href="#contact">${t.nav.contact}</a>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="${home}">${logo ? `<img src="${base}${logo}" alt="${esc(site.name)}">` : esc(site.name)}</a>
+    <button class="menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="${esc(n.menu)}" data-open="${esc(n.menu)}" data-close="${esc(n.close)}" data-menu-toggle>
+      <span class="menu-btn__icon" aria-hidden="true"></span>
+    </button>
+    <nav class="site-nav" id="site-nav" aria-label="${esc(n.label)}">
+      <ul>
+        <li><a href="#services">${n.services}</a></li>
+        <li><a href="#work">${n.work}</a></li>
+        <li><a href="#about">${n.about}</a></li>
+        <li><a href="#contact">${n.contact}</a></li>
+      </ul>
+      <a class="nav-cta" href="${bookLink}" ${ext}>${n.book}</a>
     </nav>
-    <a class="btn btn--dark btn--sm" href="${bookLink}" ${ext}>${t.nav.book}</a>
   </div>
 </header>`;
 
+  const h = t.hero;
   const hero = `
-<section class="hero">
-  <div class="wrap hero-grid">
-    <div class="hero-text">
-      <p class="label">${t.hero.eyebrow}</p>
-      <h1 class="display">${t.hero.title}</h1>
-      <p class="hero-sub">${t.hero.sub}</p>
-      <div class="actions">
-        <a class="btn btn--dark" href="${bookLink}" ${ext}>${t.hero.cta}</a>
-        <a class="btn btn--line" href="#work">${t.hero.cta2}</a>
-      </div>
-    </div>
-    <div class="hero-media">
-      ${s({ path: media.hero.path, kind: heroIsVideo ? 'video' : 'photo', ratio: '4/5', eager: true, hint: media.hero.hint, alt: t.hero.alt })}
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__copy">
+    <p class="hero__eyebrow">${h.eyebrow}</p>
+    <h1 class="hero__title" id="hero-title" style="--title-scale:${h.titleScale || 1}">
+      <span class="hero__line"><span>${h.lines[0]}</span></span>
+      <span class="hero__line hero__line--italic"><span>${h.lines[1]}</span></span>
+    </h1>
+    <span class="hero__rule" aria-hidden="true"></span>
+    <p class="hero__sub">${h.sub}</p>
+    <div class="hero__actions">
+      <a class="pill pill--solid" href="${bookLink}" ${ext}>${h.cta}</a>
+      <a class="pill pill--ghost" href="#work">${h.cta2}</a>
     </div>
   </div>
+  <div class="hero__media" data-hero-media>
+    ${heroPhoto(ctx, { ...media.hero, alt: h.alt, cls: 'hero__main', priority: true })}
+    ${heroPhoto(ctx, { ...media.heroDetail, alt: h.detailAlt, cls: 'hero__detail' })}
+    <span class="hero__dot" aria-hidden="true" data-hero-dot></span>
+  </div>
+  <p class="hero__location"><span class="hero__tick" aria-hidden="true"></span>${h.location}</p>
+  <p class="hero__aside" aria-hidden="true">${h.aside}</p>
 </section>`;
 
   const servicesSection = `
@@ -204,7 +228,7 @@ export function renderPage(ctx) {
   const footer = `
 <footer class="footer">
   <div class="wrap footer-inner">
-    <a class="logo" href="${home}" aria-label="${esc(site.name)}">${brand}</a>
+    <a class="logo" href="${home}" aria-label="${esc(site.name)}">${footerBrand}</a>
     <nav class="langs" aria-label="${esc(t.footer.langs)}">${langLinks}</nav>
     <p class="footer-meta">© ${year} ${site.name} · ${t.footer.madeBy}</p>
   </div>
@@ -215,6 +239,7 @@ export function renderPage(ctx) {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.classList.add('js')</script>
 <title>${esc(t.meta.title)}</title>
 <meta name="description" content="${esc(t.meta.description)}">
 <link rel="canonical" href="${pageUrl}">
@@ -226,7 +251,7 @@ ${alternates}
 <meta property="og:url" content="${pageUrl}">
 <meta property="og:locale" content="${t.ogLocale}">
 ${og ? `<meta property="og:image" content="${site.url}/${og}">\n<meta name="twitter:card" content="summary_large_image">` : '<!-- Add public/media/og-image.jpg (1200×630) for link previews -->'}
-<meta name="theme-color" content="#FBF8F7">
+<meta name="theme-color" content="#F7F1EA">
 <link rel="icon" href="${base}favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

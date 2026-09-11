@@ -1,5 +1,5 @@
 // Everything editable: salon details, prices, reviews, photo slots and all text in 3 languages.
-// Headings may contain <em> for the italic accent words.
+// Section headings may contain <em> for the italic accent words.
 
 const founded = 2018; // ⚠ Confirm: the old site said both 2016 and 2018.
 
@@ -76,9 +76,9 @@ export const reviews = [
 ];
 
 // Photo slots. Drop a file at public/media/<path>.jpg (or .webp/.png/.avif) and rebuild.
-// The hero can also be a video: public/media/hero.mp4.
 export const media = {
-  hero: { path: 'hero', hint: 'Your single best nail photo (or hero.mp4)' },
+  hero: { path: 'hero', hint: 'Main photo: close-up manicure, portrait', size: '1600×2000' },
+  heroDetail: { path: 'hero-detail', hint: 'A second, different nail detail', size: '800×1000' },
   about: { path: 'about', hint: 'The salon interior, no people' },
   portfolio: [
     { path: 'portfolio/1', ratio: '4/5', hint: 'Signature set, close-up' },
@@ -100,12 +100,18 @@ export const strings = {
       description: 'Manikyr, pedikyr, zgjatime me xhel, chrome, French dhe ombré në Podujevë. Rezervo në WhatsApp: +383 45 505 490.',
     },
     skip: 'Kalo te përmbajtja',
-    nav: { label: 'Navigimi', services: 'Shërbimet', work: 'Punimet', contact: 'Kontakti', book: 'Rezervo' },
+    nav: {
+      label: 'Navigimi', services: 'Shërbimet', work: 'Punimet', about: 'Rreth nesh', contact: 'Kontakti',
+      book: 'Rezervo', menu: 'Hap menynë', close: 'Mbyll menynë',
+    },
     hero: {
-      eyebrow: 'Sallon thonjsh · Podujevë',
-      title: 'Thonj që <em>bien në sy</em>.',
-      sub: 'Manikyr, pedikyr dhe zgjatime me xhel, të punuara me kujdes dhe me produkte cilësore.',
-      cta: 'Rezervo në WhatsApp', cta2: 'Shiko punimet', alt: 'Punë me thonj nga Shkurta Nails',
+      eyebrow: 'Shkurta Nails',
+      lines: ['Punuar', 'me stil.'],
+      titleScale: 1.2,
+      sub: 'Manikyr premium, xhel dhe nail art në Podujevë.',
+      cta: 'Rezervo një termin', cta2: 'Shiko punimet',
+      location: 'Podujevë · Kosovë', aside: 'Nail art · Manikyr · Xhel',
+      alt: 'Manikyr nga afër nga Shkurta Nails', detailAlt: 'Detaj nail art nga Shkurta Nails',
     },
     booking: { hello: 'Përshëndetje! Dua të rezervoj një termin.' },
     services: { eyebrow: 'Shërbimet', title: 'Shërbimet & <em>çmimet</em>', sub: 'Çmime të qarta, pa surpriza.', addons: 'Shtesa' },
@@ -133,12 +139,18 @@ export const strings = {
       description: 'Manicure, pedicure, gel extensions, chrome, French and ombré nails in Podujevo, Kosovo. Book on WhatsApp: +383 45 505 490.',
     },
     skip: 'Skip to content',
-    nav: { label: 'Main', services: 'Services', work: 'Work', contact: 'Contact', book: 'Book' },
+    nav: {
+      label: 'Main', services: 'Services', work: 'Our Work', about: 'About', contact: 'Contact',
+      book: 'Book now', menu: 'Open menu', close: 'Close menu',
+    },
     hero: {
-      eyebrow: 'Nail salon · Podujevo',
-      title: 'Nails that <em>get noticed</em>.',
-      sub: 'Manicure, pedicure and gel extensions, done with care and quality products.',
-      cta: 'Book on WhatsApp', cta2: 'See our work', alt: 'Nail work by Shkurta Nails',
+      eyebrow: 'Shkurta Nails',
+      lines: ['Beautifully', 'Done.'],
+      titleScale: 1,
+      sub: 'Premium manicure, gel & nail art in Podujevë.',
+      cta: 'Book an appointment', cta2: 'View our work',
+      location: 'Podujevë · Kosovo', aside: 'Nail art · Manicure · Gel',
+      alt: 'Close-up of a manicure by Shkurta Nails', detailAlt: 'Nail art detail by Shkurta Nails',
     },
     booking: { hello: 'Hi! I’d like to book an appointment.' },
     services: { eyebrow: 'Services', title: 'Services & <em>prices</em>', sub: 'Clear prices, no surprises.', addons: 'Add-ons' },
@@ -166,12 +178,18 @@ export const strings = {
       description: 'Maniküre, Pediküre, Gel-Verlängerung, Chrome, French und Ombré in Podujevo, Kosovo. Termin per WhatsApp: +383 45 505 490.',
     },
     skip: 'Zum Inhalt springen',
-    nav: { label: 'Navigation', services: 'Leistungen', work: 'Arbeiten', contact: 'Kontakt', book: 'Buchen' },
+    nav: {
+      label: 'Navigation', services: 'Leistungen', work: 'Arbeiten', about: 'Über uns', contact: 'Kontakt',
+      book: 'Jetzt buchen', menu: 'Menü öffnen', close: 'Menü schließen',
+    },
     hero: {
-      eyebrow: 'Nagelstudio · Podujevo',
-      title: 'Nägel, die <em>auffallen</em>.',
-      sub: 'Maniküre, Pediküre und Gel-Verlängerungen, mit Sorgfalt und hochwertigen Produkten.',
-      cta: 'Per WhatsApp buchen', cta2: 'Arbeiten ansehen', alt: 'Nageldesign von Shkurta Nails',
+      eyebrow: 'Shkurta Nails',
+      lines: ['Wunderschön', 'gemacht.'],
+      titleScale: 0.9,
+      sub: 'Premium-Maniküre, Gel & Nail Art in Podujevë.',
+      cta: 'Termin buchen', cta2: 'Unsere Arbeiten',
+      location: 'Podujevë · Kosovo', aside: 'Nail Art · Maniküre · Gel',
+      alt: 'Maniküre in Nahaufnahme von Shkurta Nails', detailAlt: 'Nail-Art-Detail von Shkurta Nails',
     },
     booking: { hello: 'Hallo! Ich möchte gerne einen Termin buchen.' },
     services: { eyebrow: 'Leistungen', title: 'Leistungen & <em>Preise</em>', sub: 'Klare Preise, keine Überraschungen.', addons: 'Extras' },

@@ -1,6 +1,6 @@
 # Photo & video checklist
 
-**0 of 12 slots filled.** This file is regenerated on every build.
+**0 of 13 slots filled.** This file is regenerated on every build.
 
 Drop a file at the path shown (any of .jpg .jpeg .png .webp .avif for photos, .mp4 .webm for video),
 then rebuild. The placeholder is replaced automatically. For videos you can also add a still frame
@@ -10,7 +10,8 @@ named `<video-name>-poster.jpg` next to it.
 |---|---|---|---|---|
 | ⬜ | photo | `public/media/logo.svg` | Logo: SVG or transparent PNG | 2000px wide+ |
 | ⬜ | photo | `public/media/og-image.jpg` | Share preview for WhatsApp / Instagram / Google | 1200×630 |
-| ⬜ | photo | `public/media/hero.jpg` | Your single best nail photo (or hero.mp4) | 1600×2000 |
+| ⬜ | photo | `public/media/hero.jpg` | Main photo: close-up manicure, portrait | 1600×2000 |
+| ⬜ | photo | `public/media/hero-detail.jpg` | A second, different nail detail | 800×1000 |
 | ⬜ | photo | `public/media/portfolio/1.jpg` | Signature set, close-up | 1600×2000 |
 | ⬜ | photo | `public/media/portfolio/2.jpg` | French | 1500×2000 |
 | ⬜ | photo | `public/media/portfolio/3.jpg` | Chrome | 1600×1600 |

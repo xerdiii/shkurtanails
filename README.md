@@ -24,7 +24,8 @@ Every image spot shows a placeholder with the exact file name it expects:
 
 | File | What goes there |
 |---|---|
-| `public/media/hero.jpg` | Your single best nail photo (or `hero.mp4` for a short muted video) |
+| `public/media/hero.jpg` | Hero: your single best close-up nail photo, portrait (about 1600×2000) |
+| `public/media/hero-detail.jpg` | Hero: a second, different nail detail shown small next to it (about 800×1000) |
 | `public/media/portfolio/1.jpg` … `8.jpg` | The 8 best nail sets |
 | `public/media/about.jpg` | The salon interior, no people |
 | `public/media/logo.svg` | Optional: replaces the text logo |
