@@ -1,5 +1,5 @@
 // Everything editable: salon details, prices, reviews, photo slots and all text in 3 languages.
-// Section headings may contain <em> for the italic accent words.
+// Section headings may contain <em> for the accent-coloured words.
 
 const founded = 2018; // ⚠ Confirm: the old site said both 2016 and 2018.
 
@@ -18,6 +18,7 @@ export const site = {
   hours: { days: [1, 2, 3, 4, 5], open: '09:00', close: '18:00' },
   languages: ['sq', 'en', 'de'],
   defaultLang: 'sq',
+  credit: { name: 'Xovah Web', url: 'https://xovahweb.com' },
 };
 
 // Main services, in the order of the original price list.
@@ -75,20 +76,25 @@ export const reviews = [
   },
 ];
 
-// Photo slots. Drop a file at public/media/<path>.jpg (or .webp/.png/.avif) and rebuild.
+// Photo slots. Drop a file at public/media/<name>.jpg (or .webp/.png/.avif) and rebuild.
+// Portfolio photos are simply named 1 … 6.
 export const media = {
   hero: { path: 'hero', hint: 'Main photo: close-up manicure, portrait', size: '1600×2000' },
   heroDetail: { path: 'hero-detail', hint: 'A second, different nail detail', size: '800×1000' },
-  about: { path: 'about', hint: 'The salon interior, no people' },
   portfolio: [
-    { path: 'portfolio/1', ratio: '4/5', hint: 'Signature set, close-up' },
-    { path: 'portfolio/2', ratio: '3/4', hint: 'French' },
-    { path: 'portfolio/3', ratio: '1/1', hint: 'Chrome' },
-    { path: 'portfolio/4', ratio: '3/4', hint: 'Nail art detail' },
-    { path: 'portfolio/5', ratio: '4/5', hint: 'Ombré' },
-    { path: 'portfolio/6', ratio: '1/1', hint: 'Natural gel overlay' },
-    { path: 'portfolio/7', ratio: '3/4', hint: 'Long extensions' },
-    { path: 'portfolio/8', ratio: '4/5', hint: 'Toenails or seasonal set' },
+    { path: '1', ratio: '4/5', hint: 'Photo 1' },
+    { path: '2', ratio: '3/4', hint: 'Photo 2' },
+    { path: '3', ratio: '1/1', hint: 'Photo 3' },
+    { path: '4', ratio: '4/5', hint: 'Photo 4' },
+    { path: '5', ratio: '1/1', hint: 'Photo 5' },
+    { path: '6', ratio: '3/4', hint: 'Photo 6' },
+  ],
+  // Four salon photos behind the draggable dot: top-left, top-right, bottom-left, bottom-right.
+  salon: [
+    { path: 'salon-1', cell: 'tl', hint: 'Salon 1 · top left' },
+    { path: 'salon-2', cell: 'tr', hint: 'Salon 2 · top right' },
+    { path: 'salon-3', cell: 'bl', hint: 'Salon 3 · bottom left' },
+    { path: 'salon-4', cell: 'br', hint: 'Salon 4 · bottom right' },
   ],
 };
 
@@ -101,9 +107,10 @@ export const strings = {
     },
     skip: 'Kalo te përmbajtja',
     nav: {
-      label: 'Navigimi', services: 'Shërbimet', work: 'Punimet', about: 'Rreth nesh', contact: 'Kontakti',
+      label: 'Navigimi', services: 'Shërbimet', work: 'Punimet', about: 'Salloni', faq: 'Pyetje', contact: 'Kontakti',
       book: 'Rezervo', menu: 'Hap menynë', close: 'Mbyll menynë',
     },
+    theme: { toDark: 'Kalo në pamje të errët', toLight: 'Kalo në pamje të ndritshme' },
     hero: {
       eyebrow: 'Shkurta Nails',
       lines: ['Punuar', 'me stil.'],
@@ -117,18 +124,31 @@ export const strings = {
     services: { eyebrow: 'Shërbimet', title: 'Shërbimet & <em>çmimet</em>', sub: 'Çmime të qarta, pa surpriza.', addons: 'Shtesa' },
     work: { eyebrow: 'Portofoli', title: 'Punimet <em>tona</em>', ig: 'Më shumë në Instagram', open: 'Hap foton', alt: 'Thonj të punuar në Shkurta Nails' },
     about: {
-      eyebrow: 'Rreth nesh', title: 'Kujdes për çdo <em>detaj</em>',
+      eyebrow: 'Salloni', title: 'Kujdes për çdo <em>detaj</em>',
       story: `Shkurta Nails nisi në qershor ${founded} me një ëndërr të thjeshtë: një vend ku bukuria, kreativiteti dhe kujdesi për veten bashkohen. Sot jemi një sallon i besuar në Podujevë, ku çdo set punohet me produkte cilësore dhe vëmendje për detajet. Shkurta ka tre certifikata profesionale për nail art.`,
-      alt: 'Salloni Shkurta Nails',
+      alt: (i) => `Salloni Shkurta Nails, foto ${i}`,
+      dragLabel: 'Tërhiq pikën për të parë katër foto të sallonit',
+      dragHint: 'Tërhiq pikën',
     },
     reviews: { eyebrow: 'Vlerësimet', title: 'Fjalë nga <em>klientet</em>' },
+    faq: {
+      eyebrow: 'Pyetje', title: 'Pyetje të <em>shpeshta</em>', sub: 'Diçka tjetër? Na shkruaj në WhatsApp.',
+      items: [
+        { q: 'Sa zgjat xheli?', a: 'Zakonisht 3–4 javë, varësisht nga rritja e thonjve dhe kujdesi që u bën.' },
+        { q: 'A mund të sjell foto të dizajnit që dua?', a: 'Po. Na e dërgo foton në WhatsApp para terminit dhe e përgatisim bashkë.' },
+        { q: 'Sa kushton një set i plotë?', a: 'Zgjatimet me xhel janë 20€. Shtesat: chrome +2€, French +3€, ombré +5€, dizajn +1–2€.' },
+        { q: 'Si të rezervoj termin?', a: 'Na shkruaj në WhatsApp ose Instagram dhe e caktojmë orarin që të përshtatet.' },
+        { q: 'Po nëse vonohem ose s’mund të vij?', a: 'Na njofto sa më herët në WhatsApp që ta zhvendosim terminin.' },
+      ],
+    },
     contact: {
       eyebrow: 'Kontakti', title: 'Rezervo <em>terminin</em>',
       sub: 'Na shkruaj në WhatsApp ose Instagram për të rezervuar terminin tënd.',
       phone: 'Telefoni', address: 'Adresa', hours: 'Orari', days: 'E hënë – E premte',
       city: 'Podujevë', country: 'Kosovë', maps: 'Hap në Google Maps', direct: 'Ose shkruaj direkt:',
     },
-    footer: { madeBy: 'Faqja nga Erdi', langs: 'Gjuha' },
+    footer: { credit: 'Powered by', langs: 'Gjuha', top: 'Lart' },
+    bar: { book: 'WhatsApp', call: 'Thirr' },
     close: 'Mbyll',
   },
 
@@ -140,9 +160,10 @@ export const strings = {
     },
     skip: 'Skip to content',
     nav: {
-      label: 'Main', services: 'Services', work: 'Our Work', about: 'About', contact: 'Contact',
+      label: 'Main', services: 'Services', work: 'Our Work', about: 'Salon', faq: 'FAQ', contact: 'Contact',
       book: 'Book now', menu: 'Open menu', close: 'Close menu',
     },
+    theme: { toDark: 'Switch to dark mode', toLight: 'Switch to light mode' },
     hero: {
       eyebrow: 'Shkurta Nails',
       lines: ['Beautifully', 'Done.'],
@@ -156,18 +177,31 @@ export const strings = {
     services: { eyebrow: 'Services', title: 'Services & <em>prices</em>', sub: 'Clear prices, no surprises.', addons: 'Add-ons' },
     work: { eyebrow: 'Portfolio', title: 'Our <em>work</em>', ig: 'More on Instagram', open: 'Open photo', alt: 'Nails done at Shkurta Nails' },
     about: {
-      eyebrow: 'About', title: 'Care in every <em>detail</em>',
+      eyebrow: 'The salon', title: 'Care in every <em>detail</em>',
       story: `Shkurta Nails opened in June ${founded} with a simple dream: a place where beauty, creativity and self-care come together. Today it’s a trusted salon in Podujevo, where every set is done with quality products and close attention to detail. Shkurta holds three professional nail art certificates.`,
-      alt: 'Inside Shkurta Nails',
+      alt: (i) => `Inside Shkurta Nails, photo ${i}`,
+      dragLabel: 'Drag the dot to see four salon photos',
+      dragHint: 'Drag the dot',
     },
     reviews: { eyebrow: 'Reviews', title: 'Kind <em>words</em>' },
+    faq: {
+      eyebrow: 'FAQ', title: 'Good to <em>know</em>', sub: 'Something else? Message us on WhatsApp.',
+      items: [
+        { q: 'How long does gel last?', a: 'Usually 3–4 weeks, depending on how fast your nails grow and how you care for them.' },
+        { q: 'Can I bring a photo of the design I want?', a: 'Yes. Send it on WhatsApp before your appointment and we’ll plan it together.' },
+        { q: 'How much is a full set?', a: 'Gel extensions are 20€. Add-ons: chrome +2€, French +3€, ombré +5€, nail design +1–2€.' },
+        { q: 'How do I book?', a: 'Message us on WhatsApp or Instagram and we’ll agree on a time that suits you.' },
+        { q: 'What if I’m late or can’t make it?', a: 'Let us know on WhatsApp as early as you can so we can move your appointment.' },
+      ],
+    },
     contact: {
       eyebrow: 'Contact', title: 'Book your <em>appointment</em>',
       sub: 'Message us on WhatsApp or Instagram to book your appointment.',
       phone: 'Phone', address: 'Address', hours: 'Hours', days: 'Monday – Friday',
       city: 'Podujevo', country: 'Kosovo', maps: 'Open in Google Maps', direct: 'Or message directly:',
     },
-    footer: { madeBy: 'Website by Erdi', langs: 'Language' },
+    footer: { credit: 'Powered by', langs: 'Language', top: 'Top' },
+    bar: { book: 'WhatsApp', call: 'Call' },
     close: 'Close',
   },
 
@@ -179,9 +213,10 @@ export const strings = {
     },
     skip: 'Zum Inhalt springen',
     nav: {
-      label: 'Navigation', services: 'Leistungen', work: 'Arbeiten', about: 'Über uns', contact: 'Kontakt',
+      label: 'Navigation', services: 'Leistungen', work: 'Arbeiten', about: 'Salon', faq: 'FAQ', contact: 'Kontakt',
       book: 'Jetzt buchen', menu: 'Menü öffnen', close: 'Menü schließen',
     },
+    theme: { toDark: 'Zu dunkler Ansicht wechseln', toLight: 'Zu heller Ansicht wechseln' },
     hero: {
       eyebrow: 'Shkurta Nails',
       lines: ['Wunderschön', 'gemacht.'],
@@ -195,18 +230,31 @@ export const strings = {
     services: { eyebrow: 'Leistungen', title: 'Leistungen & <em>Preise</em>', sub: 'Klare Preise, keine Überraschungen.', addons: 'Extras' },
     work: { eyebrow: 'Portfolio', title: 'Unsere <em>Arbeiten</em>', ig: 'Mehr auf Instagram', open: 'Foto öffnen', alt: 'Nägel aus dem Studio Shkurta Nails' },
     about: {
-      eyebrow: 'Über uns', title: 'Liebe zum <em>Detail</em>',
+      eyebrow: 'Der Salon', title: 'Liebe zum <em>Detail</em>',
       story: `Shkurta Nails wurde im Juni ${founded} mit einem einfachen Traum eröffnet: ein Ort, an dem Schönheit, Kreativität und Selbstfürsorge zusammenkommen. Heute vertrauen uns viele Kundinnen in Podujevo, und jedes Set entsteht mit hochwertigen Produkten und viel Liebe zum Detail. Shkurta hat drei Fachzertifikate für Nail Art.`,
-      alt: 'Im Studio Shkurta Nails',
+      alt: (i) => `Im Studio Shkurta Nails, Foto ${i}`,
+      dragLabel: 'Zieh den Punkt, um vier Salonfotos zu sehen',
+      dragHint: 'Punkt ziehen',
     },
     reviews: { eyebrow: 'Bewertungen', title: 'Was Kundinnen <em>sagen</em>' },
+    faq: {
+      eyebrow: 'FAQ', title: 'Gut zu <em>wissen</em>', sub: 'Noch etwas? Schreib uns per WhatsApp.',
+      items: [
+        { q: 'Wie lange hält Gel?', a: 'Meist 3–4 Wochen, je nachdem, wie schnell deine Nägel wachsen und wie du sie pflegst.' },
+        { q: 'Kann ich ein Foto meines Wunschdesigns mitbringen?', a: 'Ja. Schick es uns vor dem Termin per WhatsApp und wir planen es gemeinsam.' },
+        { q: 'Was kostet ein komplettes Set?', a: 'Gel-Verlängerung kostet 20€. Extras: Chrome +2€, French +3€, Ombré +5€, Nageldesign +1–2€.' },
+        { q: 'Wie buche ich einen Termin?', a: 'Schreib uns per WhatsApp oder Instagram, und wir finden einen passenden Termin.' },
+        { q: 'Was, wenn ich mich verspäte oder absagen muss?', a: 'Sag uns so früh wie möglich per WhatsApp Bescheid, dann verschieben wir den Termin.' },
+      ],
+    },
     contact: {
       eyebrow: 'Kontakt', title: 'Termin <em>buchen</em>',
       sub: 'Schreib uns per WhatsApp oder Instagram, um deinen Termin zu buchen.',
       phone: 'Telefon', address: 'Adresse', hours: 'Öffnungszeiten', days: 'Montag – Freitag',
       city: 'Podujevo', country: 'Kosovo', maps: 'In Google Maps öffnen', direct: 'Oder direkt schreiben:',
     },
-    footer: { madeBy: 'Website von Erdi', langs: 'Sprache' },
+    footer: { credit: 'Powered by', langs: 'Sprache', top: 'Nach oben' },
+    bar: { book: 'WhatsApp', call: 'Anrufen' },
     close: 'Schließen',
   },
 };
