@@ -606,16 +606,12 @@ button.shot:hover img { transform: scale(1.04); }
 .pill--line { border-color: var(--line); color: var(--ink); }
 .pill--line:hover { background: var(--tint); border-color: var(--ink); transform: translateY(-2px); }
 
-/* ---------- Xovah Web credit ---------- */
-.footer-made {
-  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 6px 12px;
-  margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line);
-  text-align: center; font-size: 15px; color: var(--muted);
+/* ---------- Text selection ---------- */
+::selection { background: #BFD9B8; color: #23301F; }
+::-moz-selection { background: #BFD9B8; color: #23301F; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) ::selection { background: #4A6D45; color: #F2EEE6; }
+  :root:not([data-theme="light"]) ::-moz-selection { background: #4A6D45; color: #F2EEE6; }
 }
-.credit--big {
-  font-family: var(--serif); font-size: clamp(21px, 2.2vw, 30px); line-height: 1.1;
-  color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--blush); padding-bottom: 3px;
-  transition: color .3s var(--ease-out), border-color .3s var(--ease-out);
-}
-.credit--big:hover { color: var(--sage); border-color: var(--sage); }
-.footer-made__url { width: 100
+:root[data-theme="dark"] ::selection { background: #4A6D45; color: #F2EEE6; }
+:root[data-theme="dark"] ::-moz-selection { background: #4A6D45; color: #F2EEE6; }
