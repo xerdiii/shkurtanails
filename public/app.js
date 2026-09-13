@@ -83,16 +83,19 @@
 
     let dragging = false;
     quad.addEventListener('pointerdown', (e) => {
+      if (!e.isPrimary) return; // ignore a second finger
       dragging = true;
       try { quad.setPointerCapture(e.pointerId); } catch (err) {}
       fromPointer(e);
-      handle.focus({ preventScroll: true });
+      // Focusing on touch makes the browser scroll the page to the button, so only focus for a mouse.
+      if (e.pointerType === 'mouse') handle.focus({ preventScroll: true });
       e.preventDefault();
     });
-    quad.addEventListener('pointermove', (e) => { if (dragging) fromPointer(e); });
+    quad.addEventListener('pointermove', (e) => { if (dragging && e.isPrimary) fromPointer(e); });
     const stop = (e) => {
       dragging = false;
       try { quad.releasePointerCapture(e.pointerId); } catch (err) { /* already released */ }
+      if (e.pointerType !== 'mouse' && document.activeElement === handle) handle.blur();
     };
     quad.addEventListener('pointerup', stop);
     quad.addEventListener('pointercancel', stop);

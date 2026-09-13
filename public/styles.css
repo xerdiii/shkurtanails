@@ -421,7 +421,7 @@ a { color: inherit; }
 /* Phones and portrait tablets: copy first, then the photograph. */
 @media (max-width: 767px), (max-width: 1023px) and (orientation: portrait) {
   .hero {
-    --media-w: min(62vw, 520px);
+    --media-w: min(78vw, 520px);
     --rest: 1.015;
     display: block; height: auto; min-height: 100svh;
     padding: calc(var(--header-h) + clamp(28px, 7vw, 56px)) var(--edge) clamp(40px, 10vw, 72px);
@@ -431,7 +431,7 @@ a { color: inherit; }
   .hero__title { font-size: calc(min(13cqi, 104px) * var(--title-scale, 1)); }
   .hero__media { position: relative; right: auto; bottom: auto; margin-top: clamp(40px, 10vw, 72px); }
   .hero__main, .hero__detail { transform: none; }
-  .hero__detail { left: auto; right: -30%; bottom: -9%; width: 48%; }
+  .hero__detail { left: auto; right: -18%; bottom: -8%; width: 42%; }
   .hero__location { position: static; margin-top: clamp(48px, 13vw, 80px); }
   .hero__aside, .hero__dot { display: none; }
   .hero.is-settled .hero__main .hero-img :is(img, video) { animation: hero-breathe 8s ease-in-out infinite alternate; }
@@ -460,7 +460,7 @@ a { color: inherit; }
 }
 
 /* ---------- Sections ---------- */
-.section { padding-block: clamp(72px, 12vw, 160px); border-top: 1px solid var(--line); }
+.section { padding-block: clamp(64px, 11vw, 160px); border-top: 1px solid var(--line); }
 .section--tint { background: var(--tint); border-top: 0; }
 .section--dark { background: var(--dark); color: var(--on-dark); border-top: 0; }
 .section--dark .label, .section--dark .intro { color: var(--on-dark-muted); }
@@ -488,15 +488,16 @@ a { color: inherit; }
 }
 
 /* ---------- Portfolio ---------- */
-.masonry { columns: 3; column-gap: 16px; }
-.shot { display: block; width: 100%; margin: 0 0 16px; padding: 0; border: 0; background: none; break-inside: avoid; }
+/* An even grid of square tiles: the photos are square, so nothing gets cropped oddly. */
+.masonry { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.shot { display: block; width: 100%; margin: 0; padding: 0; border: 0; background: none; }
+.masonry .slot { aspect-ratio: 1; }
 button.shot { cursor: zoom-in; }
-button.shot img { transition: opacity .3s; }
-button.shot:hover img { opacity: .88; }
+button.shot img { transition: transform .5s var(--ease-out), opacity .3s; }
+button.shot:hover img { transform: scale(1.03); opacity: .94; }
 
 @media (max-width: 760px) {
-  .masonry { columns: 2; column-gap: 10px; }
-  .shot { margin-bottom: 10px; }
+  .masonry { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
 }
 
 /* ---------- Salon: four photos, one draggable dot ---------- */
@@ -505,7 +506,9 @@ button.shot:hover img { opacity: .88; }
 .quad {
   --qx: 50%; --qy: 50%;
   position: relative; width: 100%; aspect-ratio: 4/5; overflow: hidden;
-  background: var(--ph-bg); touch-action: none; cursor: crosshair;
+  background: var(--ph-bg); cursor: crosshair;
+  /* Let a finger drag the dot instead of scrolling or selecting the photos. */
+  touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
 }
 .quad__cell { position: absolute; inset: 0; margin: 0; }
 .quad__cell img { width: 100%; height: 100%; object-fit: cover; }
@@ -530,7 +533,7 @@ button.shot:hover img { opacity: .88; }
 .quad__handle {
   position: absolute; z-index: 4; left: var(--qx); top: var(--qy); transform: translate(-50%, -50%);
   display: grid; place-items: center; width: 54px; height: 54px; padding: 0;
-  border: 0; border-radius: 50%; background: none; cursor: grab;
+  border: 0; border-radius: 50%; background: none; cursor: grab; touch-action: none;
 }
 .quad__handle:active { cursor: grabbing; }
 .quad__dot { width: 20px; height: 20px; border-radius: 50%; background: #fff; box-shadow: 0 4px 16px rgba(0, 0, 0, .45); }
@@ -656,4 +659,12 @@ button.shot:hover img { opacity: .88; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .btn, button.shot img { transition: none; }
+}
+
+/* Phones: a squarer salon frame and tighter price rows. */
+@media (max-width: 600px) {
+  .quad { aspect-ratio: 1; }
+  .prices li { padding: 18px 0; }
+  .faq summary { padding: 18px 0; }
+  .story { margin-top: 22px; }
 }
