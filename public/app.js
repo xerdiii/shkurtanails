@@ -74,28 +74,53 @@
       quad.style.setProperty('--qx', `${x.toFixed(2)}%`);
       quad.style.setProperty('--qy', `${y.toFixed(2)}%`);
     };
-    const fromPointer = (e) => {
+    const moveTo = (clientX, clientY) => {
       const r = quad.getBoundingClientRect();
-      x = clamp(((e.clientX - r.left) / r.width) * 100);
-      y = clamp(((e.clientY - r.top) / r.height) * 100);
+      if (!r.width || !r.height) return; // never divide by zero: that threw the dot to a corner
+      x = clamp(((clientX - r.left) / r.width) * 100);
+      y = clamp(((clientY - r.top) / r.height) * 100);
       apply();
     };
 
+    // Fingers: plain touch events. Safari and some Android browsers stop sending
+    // pointermove after setPointerCapture, which left the dot stuck mid-drag.
+    let touchId = null;
+    quad.addEventListener('touchstart', (e) => {
+      const touch = e.changedTouches[0];
+      touchId = touch.identifier;
+      moveTo(touch.clientX, touch.clientY);
+      e.preventDefault(); // no scrolling, zooming or tap highlight while dragging
+    }, { passive: false });
+    quad.addEventListener('touchmove', (e) => {
+      if (touchId === null) return;
+      const touch = [...e.touches].find((t) => t.identifier === touchId);
+      if (!touch) return;
+      moveTo(touch.clientX, touch.clientY);
+      e.preventDefault();
+    }, { passive: false });
+    const endTouch = (e) => {
+      if (touchId === null) return;
+      if ([...e.changedTouches].some((t) => t.identifier === touchId)) touchId = null;
+    };
+    quad.addEventListener('touchend', endTouch);
+    quad.addEventListener('touchcancel', endTouch);
+
+    // Mouse and pen keep the pointer-event path.
     let dragging = false;
     quad.addEventListener('pointerdown', (e) => {
-      if (!e.isPrimary) return; // ignore a second finger
+      if (e.pointerType === 'touch') return; // handled by the touch listeners above
       dragging = true;
       try { quad.setPointerCapture(e.pointerId); } catch (err) {}
-      fromPointer(e);
-      // Focusing on touch makes the browser scroll the page to the button, so only focus for a mouse.
-      if (e.pointerType === 'mouse') handle.focus({ preventScroll: true });
+      moveTo(e.clientX, e.clientY);
+      handle.focus({ preventScroll: true });
       e.preventDefault();
     });
-    quad.addEventListener('pointermove', (e) => { if (dragging && e.isPrimary) fromPointer(e); });
+    quad.addEventListener('pointermove', (e) => {
+      if (dragging && e.pointerType !== 'touch') moveTo(e.clientX, e.clientY);
+    });
     const stop = (e) => {
       dragging = false;
       try { quad.releasePointerCapture(e.pointerId); } catch (err) { /* already released */ }
-      if (e.pointerType !== 'mouse' && document.activeElement === handle) handle.blur();
     };
     quad.addEventListener('pointerup', stop);
     quad.addEventListener('pointercancel', stop);
