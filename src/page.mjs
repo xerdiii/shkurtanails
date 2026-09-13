@@ -29,10 +29,20 @@ function slot(ctx, { path, kind = 'photo', ratio = '4/5', hint = '', size, alt =
 // Hero photograph. Nested layers keep the transforms apart:
 // figure = parallax, .hero-reveal = entrance mask, .hero-img = hover scale, img = entrance scale / breathing.
 function heroPhoto(ctx, { path, hint, size, alt, cls, priority }) {
-  const src = ctx.find(path, 'photo', { hint, size });
-  const inner = src
-    ? `<img src="${ctx.base}${src}" alt="${esc(alt)}" ${priority ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} decoding="async">`
-    : placeholder(path, 'photo', '4/5', hint);
+  // A hero slot takes a photo or a short muted video (hero.mp4).
+  const video = ctx.find(path, 'video', {}, false);
+  if (video) ctx.find(path, 'video', { hint, size }, true);
+  const src = video || ctx.find(path, 'photo', { hint, size });
+  let inner;
+  if (video) {
+    const poster = ctx.find(`${path}-poster`, 'photo', {}, false);
+    const type = video.endsWith('.webm') ? 'video/webm' : 'video/mp4';
+    inner = `<video autoplay muted loop playsinline preload="${priority ? 'auto' : 'metadata'}"${poster ? ` poster="${ctx.base}${poster}"` : ''} aria-label="${esc(alt)}"><source src="${ctx.base}${video}" type="${type}"></video>`;
+  } else if (src) {
+    inner = `<img src="${ctx.base}${src}" alt="${esc(alt)}" ${priority ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
+  } else {
+    inner = placeholder(path, 'photo', '4/5', hint);
+  }
   return `<figure class="${cls}${src ? '' : ' is-empty'}"${src ? '' : ' aria-hidden="true"'}><div class="hero-reveal"><div class="hero-img">${inner}</div></div></figure>`;
 }
 
