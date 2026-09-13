@@ -155,15 +155,24 @@ a { color: inherit; }
 .site-header {
   position: fixed; inset: 0 0 auto; z-index: 40;
   color: #fff;
-  background: rgba(var(--header-rgb), 0);
   border-bottom: 1px solid transparent;
-  transition: background-color .4s ease, border-color .4s ease, color .4s ease;
+  transition: border-color .4s ease, color .4s ease;
+}
+/* The frosted bar sits on a pseudo-element. A backdrop-filter on the header itself
+   would make it the containing block for the fixed mobile menu, which then opened
+   only as tall as the bar. */
+.site-header::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: rgba(var(--header-rgb), 0);
+  transition: background-color .4s ease;
+}
+.site-header.is-scrolled::before, .site-header.is-open::before {
+  background: rgba(var(--header-rgb), .96);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
 .site-header.is-scrolled, .site-header.is-open {
-  background: rgba(var(--header-rgb), .96);
   border-bottom-color: var(--line);
   color: var(--ink);
-  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
 }
 .site-header__inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: var(--header-h); padding-inline: var(--edge); }
 
@@ -235,7 +244,7 @@ a { color: inherit; }
   .site-nav {
     position: fixed; inset: 0; z-index: 1;
     flex-direction: column; align-items: flex-start; justify-content: flex-start; gap: 0;
-    padding: calc(var(--header-h) + 26px) var(--edge) calc(32px + env(safe-area-inset-bottom));
+    padding: calc(var(--header-h) + 12px) var(--edge) calc(24px + env(safe-area-inset-bottom));
     background: var(--bg); color: var(--ink); overflow-y: auto;
     opacity: 0; visibility: hidden;
     transition: opacity .35s var(--ease-out), visibility 0s linear .35s;
@@ -243,14 +252,14 @@ a { color: inherit; }
   .is-open .site-nav { opacity: 1; visibility: visible; transition: opacity .35s var(--ease-out); }
   .site-nav ul { flex-direction: column; gap: 2px; width: 100%; }
   .site-nav ul a {
-    display: block; padding: 8px 0; background: none;
+    display: block; padding: 5px 0; background: none;
     font-family: var(--serif); font-size: clamp(32px, 9vw, 52px); font-weight: 400; line-height: 1.1;
     letter-spacing: -.01em; text-transform: none;
   }
-  .site-nav .pill { display: inline-flex; margin-top: 26px; }
+  .site-nav .pill { display: inline-flex; margin-top: 22px; }
   .site-nav__extra {
     display: flex; flex-direction: column; gap: 12px; width: 100%;
-    margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line);
+    margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line);
     font-size: 16px; color: var(--muted);
   }
   .site-nav__extra a { text-decoration: none; }
