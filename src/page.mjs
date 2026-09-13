@@ -253,11 +253,17 @@ export function renderPage(ctx) {
   const faqSection = `
 <section class="section" id="faq">
   <div class="wrap faq-grid">
-    <header class="section-head">
-      <p class="label">${t.faq.eyebrow}</p>
-      <h2 class="title">${t.faq.title}</h2>
-      <p class="intro">${t.faq.sub}</p>
-    </header>
+    <div>
+      <header class="section-head">
+        <p class="label">${t.faq.eyebrow}</p>
+        <h2 class="title">${t.faq.title}</h2>
+        <p class="intro">${t.faq.sub}</p>
+      </header>
+      <div class="faq-photos">
+        ${s({ path: media.faq[0].path, ratio: '4/5', hint: media.faq[0].hint, size: '1000×1250', alt: t.work.alt, cls: 'faq-photos__a' })}
+        ${s({ path: media.faq[1].path, ratio: '4/5', hint: media.faq[1].hint, size: '1000×1250', alt: t.work.alt, cls: 'faq-photos__b' })}
+      </div>
+    </div>
     <div class="faq">
       ${t.faq.items.map((f, i) => `<details${i === 0 ? ' open' : ''}><summary><span>${f.q}</span><span class="faq__sign" aria-hidden="true"></span></summary><p>${f.a}</p></details>`).join('\n      ')}
     </div>

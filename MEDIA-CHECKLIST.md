@@ -1,6 +1,6 @@
 # Photo & video checklist
 
-**17 of 18 slots filled.** This file is regenerated on every build.
+**19 of 20 slots filled.** This file is regenerated on every build.
 
 Drop a file at the path shown (any of .jpg .jpeg .png .webp .avif for photos, .mp4 .webm for video),
 then rebuild. The placeholder is replaced automatically. For videos you can also add a still frame
@@ -25,4 +25,6 @@ named `<video-name>-poster.jpg` next to it.
 | ✅ | photo | `public/media/salon-2.webp` | Salon 2 · top right | 1600×1600 |
 | ✅ | photo | `public/media/salon-3.webp` | Salon 3 · bottom left | 1600×1600 |
 | ✅ | photo | `public/media/salon-4.webp` | Salon 4 · bottom right | 1600×1600 |
+| ✅ | photo | `public/media/faq-1.webp` | FAQ collage, upper photo | 1000×1250 |
+| ✅ | photo | `public/media/faq-2.webp` | FAQ collage, lower photo | 1000×1250 |
 | ✅ | photo | `public/media/contact-bg-1800.webp` | Contact background photo | 3840px wide |

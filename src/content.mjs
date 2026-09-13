@@ -83,6 +83,11 @@ export const media = {
   heroTall: { path: 'hero-tall', hint: 'Hero photo for phones, tall', size: '1200×1800' },
   clip: { path: 'hero', hint: 'Short salon video', size: '1080×1350' },
   clipStill: { path: 'hero-detail', hint: 'Photo shown next to the video', size: '1000×1250' },
+  // Two overlapping photos beside the questions.
+  faq: [
+    { path: 'faq-1', hint: 'FAQ collage, upper photo' },
+    { path: 'faq-2', hint: 'FAQ collage, lower photo' },
+  ],
   portfolio: [
     { path: '1', hint: 'Photo 1' },
     { path: '2', hint: 'Photo 2' },
