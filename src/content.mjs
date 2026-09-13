@@ -30,10 +30,10 @@ export const services = [
   {
     id: 'toenails', price: 15,
     name: { sq: 'Thonjtë e këmbëve', en: 'Toenails', de: 'Fußnägel' },
-    note: { sq: 'Zgjatim + ngjyrë ose French', en: 'Extensions + colour or French', de: 'Verlängerung + Farbe oder French' },
+    note: { sq: 'Zgjatje + ngjyrë ose French', en: 'Extensions + colour or French', de: 'Verlängerung + Farbe oder French' },
   },
-  { id: 'gel-extensions', price: 20, name: { sq: 'Zgjatime me xhel', en: 'Gel extensions', de: 'Gel-Verlängerung' } },
-  { id: 'tips-extensions', price: 20, name: { sq: 'Zgjatime me tips', en: 'Extensions with tips', de: 'Verlängerung mit Tips' } },
+  { id: 'gel-extensions', price: 20, name: { sq: 'Zgjatje me xhel', en: 'Gel extensions', de: 'Gel-Verlängerung' } },
+  { id: 'tips-extensions', price: 20, name: { sq: 'Zgjatje me tips', en: 'Extensions with tips', de: 'Verlängerung mit Tips' } },
 ];
 
 export const addons = [
@@ -50,7 +50,7 @@ export const team = [
     whatsapp: '38345505490', instagram: 'shkurtathaci',
     role: { sq: 'Themeluese & artiste kryesore', en: 'Founder & lead artist', de: 'Gründerin & Lead Artist' },
     bio: {
-      sq: 'Specialiste e zgjatimeve me xhel dhe e nail art-it të detajuar. Ka tre certifikata profesionale dhe ka trajnuar studente.',
+      sq: 'Specialiste e zgjatjeve me xhel dhe e nail art-it të detajuar. Ka tre certifikata profesionale dhe ka trajnuar studente.',
       en: 'Specialises in gel extensions and detailed nail art. Holds three professional certificates and has trained students.',
       de: 'Spezialisiert auf Gel-Verlängerungen und detailreiches Nail Art. Hat drei Fachzertifikate und bereits Schülerinnen ausgebildet.',
     },
@@ -110,7 +110,7 @@ export const strings = {
     htmlLang: 'sq', ogLocale: 'sq_AL',
     meta: {
       title: 'Shkurta Nails · Sallon thonjsh në Podujevë',
-      description: 'Manikyr, pedikyr, zgjatime me xhel, chrome, French dhe ombré në Podujevë. Rezervo në Instagram ose WhatsApp.',
+      description: 'Manikyr, pedikyr, zgjatje me xhel, chrome, French dhe ombré në Podujevë. Rezervo në Instagram ose WhatsApp.',
     },
     skip: 'Kalo te përmbajtja',
     nav: {
@@ -150,7 +150,7 @@ export const strings = {
       items: [
         { q: 'Sa zgjat xheli?', a: 'Zakonisht 3–4 javë, varësisht nga rritja e thonjve dhe kujdesi që u bën.' },
         { q: 'A mund të sjell foto të dizajnit që dua?', a: 'Po. Na e dërgo foton në Instagram para terminit dhe e përgatisim bashkë.' },
-        { q: 'Sa kushton një set i plotë?', a: 'Zgjatimet me xhel janë 20€. Shtesat: chrome +2€, French +3€, ombré +5€, dizajn +1–2€.' },
+        { q: 'Sa kushton një set i plotë?', a: 'Zgjatjet me xhel janë 20€. Shtesat: chrome +2€, French +3€, ombré +5€, dizajn +1–2€.' },
         { q: 'Si të rezervoj termin?', a: 'Na shkruaj në Instagram ose WhatsApp dhe e caktojmë orarin që të përshtatet.' },
         { q: 'Po nëse vonohem ose s’mund të vij?', a: 'Na njofto sa më herët që ta zhvendosim terminin.' },
       ],
