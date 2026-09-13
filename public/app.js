@@ -62,20 +62,7 @@
     onScroll();
   }
 
-  // ---------- Hero text reveal ----------
-  const hero = document.querySelector('[data-hero]');
-  if (hero) {
-    const heroImg = hero.querySelector('.hero__bg img');
-    const ready = Promise.all([
-      document.fonts ? document.fonts.ready : null,
-      heroImg && heroImg.decode ? heroImg.decode().catch(() => {}) : null,
-    ]);
-    const timeout = new Promise((resolve) => setTimeout(resolve, 900));
-    Promise.race([ready, timeout]).then(() => {
-      void hero.offsetWidth; // apply the starting state first, so the transitions run
-      hero.classList.add('is-in');
-    });
-  }
+  // The hero entrance is pure CSS, so the text can never get stuck invisible.
 
   // ---------- Salon: four photos, one draggable dot ----------
   document.querySelectorAll('[data-quad]').forEach((quad) => {

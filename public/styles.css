@@ -286,7 +286,7 @@ a { color: inherit; }
   position: absolute; inset: 0; z-index: -1;
   background: linear-gradient(180deg, rgba(24, 22, 18, .52) 0%, rgba(24, 22, 18, .26) 38%, rgba(24, 22, 18, .66) 100%);
 }
-.hero__inner { display: grid; justify-items: center; max-width: 24ch; }
+.hero__inner { display: grid; justify-items: center; max-width: min(92vw, 820px); }
 .hero__eyebrow { font-size: 11.5px; font-weight: 500; letter-spacing: .3em; text-transform: uppercase; color: rgba(255, 255, 255, .88); }
 .hero__title {
   margin-top: 22px;
@@ -308,20 +308,20 @@ a { color: inherit; }
 }
 .hero__scroll i { display: block; width: 1px; height: 36px; background: currentColor; opacity: .7; }
 
-/* Hero entrance */
-.js .hero__bg img { transform: scale(1.06); }
-.js .hero__inner > *, .js .hero__scroll { opacity: 0; transform: translateY(18px); }
-.js .hero__scroll { transform: translate(-50%, 18px); }
-.hero.is-in .hero__bg img { transform: none; transition: transform 1.8s var(--ease-out); }
-.hero.is-in .hero__inner > * { opacity: 1; transform: none; transition: opacity .9s var(--ease-out), transform .9s var(--ease-out); }
-.hero.is-in .hero__inner > :nth-child(2) { transition-delay: .1s; }
-.hero.is-in .hero__inner > :nth-child(3) { transition-delay: .2s; }
-.hero.is-in .hero__inner > :nth-child(4) { transition-delay: .3s; }
-.hero.is-in .hero__scroll { opacity: 1; transform: translate(-50%, 0); transition: opacity .8s ease .6s, transform .8s var(--ease-out) .6s; }
+/* Hero entrance. Pure CSS with fill mode "backwards", so the text is visible
+   by default and only hidden while its own animation is pending. */
+@keyframes hero-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes hero-rise-centred { from { opacity: 0; transform: translate(-50%, 18px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@keyframes hero-zoom { from { transform: scale(1.06); } to { transform: none; } }
+.hero__bg img { animation: hero-zoom 1.8s var(--ease-out) backwards; }
+.hero__inner > * { animation: hero-rise .9s var(--ease-out) backwards; }
+.hero__inner > :nth-child(2) { animation-delay: .1s; }
+.hero__inner > :nth-child(3) { animation-delay: .2s; }
+.hero__inner > :nth-child(4) { animation-delay: .3s; }
+.hero__scroll { animation: hero-rise-centred .9s var(--ease-out) .6s backwards; }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .hero__bg img, .js .hero__inner > *, .js .hero__scroll { opacity: 1; transform: none; }
-  .js .hero__scroll { transform: translateX(-50%); }
+  .hero__bg img, .hero__inner > *, .hero__scroll { animation: none; }
   .hero *, .site-header * { transition: none !important; animation: none !important; }
 }
 
