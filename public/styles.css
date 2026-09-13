@@ -505,7 +505,7 @@ button.shot:hover img { transform: scale(1.03); opacity: .94; }
 .story { max-width: 44ch; margin-top: 28px; font-size: clamp(17px, 1.4vw, 19px); line-height: 1.75; color: var(--ink-2); }
 .quad {
   --qx: 50%; --qy: 50%;
-  position: relative; width: 100%; aspect-ratio: 4/5; overflow: hidden;
+  position: relative; width: 100%; aspect-ratio: 1; overflow: hidden;
   background: var(--ph-bg); cursor: crosshair;
   /* Let a finger drag the dot instead of scrolling or selecting the photos. */
   touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
@@ -663,7 +663,7 @@ button.shot:hover img { transform: scale(1.03); opacity: .94; }
 
 /* Phones: a squarer salon frame and tighter price rows. */
 @media (max-width: 600px) {
-  .quad { aspect-ratio: 1; }
+  /* square already */
   .prices li { padding: 18px 0; }
   .faq summary { padding: 18px 0; }
   .story { margin-top: 22px; }
