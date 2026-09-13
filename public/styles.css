@@ -497,6 +497,14 @@ button.shot:hover img { transform: scale(1.04); }
 }
 
 /* ---------- Contact ---------- */
+/* Photo background with a dark wash over it, so the cream text stays readable. */
+.section--photo { position: relative; isolation: isolate; overflow: hidden; }
+.section__bg { position: absolute; inset: 0; z-index: -2; }
+.section__bg img { width: 100%; height: 100%; object-fit: cover; }
+.section--photo::before {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(160deg, rgba(14, 16, 12, .9) 0%, rgba(14, 16, 12, .84) 50%, rgba(14, 16, 12, .9) 100%);
+}
 .contact-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(44px, 7vw, 120px); align-items: start; }
 .contact-grid .actions { margin-top: 36px; }
 .details { border-top: 1px solid var(--line-dark); }

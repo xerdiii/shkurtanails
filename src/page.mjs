@@ -265,8 +265,17 @@ export function renderPage(ctx) {
 </section>`;
 
   const c = t.contact;
+  // Contact background: one photo exported at three widths, so a 4K screen gets the
+  // full-resolution file and a phone downloads the small one.
+  const contactBg = [['contact-bg-1800', 1800], ['contact-bg-2800', 2800], ['contact-bg-3840', 3840]]
+    .map(([name, width], i) => [ctx.find(name, 'photo', i === 0 ? { hint: 'Contact background photo', size: '3840px wide' } : {}, i === 0), width])
+    .filter(([file]) => file);
+  const contactBgHtml = contactBg.length
+    ? `<div class="section__bg" aria-hidden="true"><img src="${base}${contactBg[0][0]}" srcset="${contactBg.map(([file, width]) => `${base}${file} ${width}w`).join(', ')}" sizes="100vw" alt="" loading="lazy" decoding="async"></div>`
+    : '';
   const contactSection = `
-<section class="section section--dark" id="contact">
+<section class="section section--dark section--photo" id="contact">
+  ${contactBgHtml}
   <div class="wrap contact-grid">
     <div>
       <p class="label">${c.eyebrow}</p>
