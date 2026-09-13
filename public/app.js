@@ -1,8 +1,6 @@
 (() => {
   const root = document.documentElement;
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
-  const wideScreen = matchMedia('(min-width: 768px)');
 
   // ---------- Light / dark mode ----------
   const themeBtn = document.querySelector('[data-theme-toggle]');
@@ -19,7 +17,7 @@
     label();
   }
 
-  // ---------- Header: more opaque once the page scrolls ----------
+  // ---------- Header: solid once the page scrolls past the hero image ----------
   const header = document.querySelector('[data-header]');
   if (header) {
     const onScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 12);
@@ -62,6 +60,21 @@
     const onScroll = () => mbar.classList.toggle('is-on', window.scrollY > innerHeight * 0.55);
     addEventListener('scroll', onScroll, { passive: true });
     onScroll();
+  }
+
+  // ---------- Hero text reveal ----------
+  const hero = document.querySelector('[data-hero]');
+  if (hero) {
+    const heroImg = hero.querySelector('.hero__bg img');
+    const ready = Promise.all([
+      document.fonts ? document.fonts.ready : null,
+      heroImg && heroImg.decode ? heroImg.decode().catch(() => {}) : null,
+    ]);
+    const timeout = new Promise((resolve) => setTimeout(resolve, 900));
+    Promise.race([ready, timeout]).then(() => {
+      void hero.offsetWidth; // apply the starting state first, so the transitions run
+      hero.classList.add('is-in');
+    });
   }
 
   // ---------- Salon: four photos, one draggable dot ----------
@@ -112,73 +125,9 @@
     });
   });
 
-  // ---------- Hero ----------
-  const hero = document.querySelector('[data-hero]');
-  if (hero) {
-    const media = hero.querySelector('[data-hero-media]');
-    const dot = hero.querySelector('[data-hero-dot]');
-    const mainImg = hero.querySelector('.hero__main img');
-
-    // Start the entrance once fonts and the main photo are ready (or after 900 ms at most).
-    const ready = Promise.all([
-      document.fonts ? document.fonts.ready : null,
-      mainImg && mainImg.decode ? mainImg.decode().catch(() => {}) : null,
-    ]);
-    const timeout = new Promise((resolve) => setTimeout(resolve, 900));
-    Promise.race([ready, timeout]).then(() => {
-      void hero.offsetWidth; // make sure the hidden starting state is applied, so the transitions run
-      hero.classList.add('is-in');
-      setTimeout(() => {
-        hero.classList.add('is-settled');
-        startPointerMotion();
-      }, reducedMotion.matches ? 0 : 1400);
-    });
-
-    // Barely-there parallax and a small trailing dot, desktop mouse only.
-    function startPointerMotion() {
-      if (!media || reducedMotion.matches || !finePointer.matches || !wideScreen.matches) return;
-
-      let targetX = 0, targetY = 0, x = 0, y = 0;
-      let dotTargetX = 0, dotTargetY = 0, dotX = 0, dotY = 0, dotVisible = false;
-      let frame = 0;
-
-      const tick = () => {
-        x += (targetX - x) * 0.06;
-        y += (targetY - y) * 0.06;
-        dotX += (dotTargetX - dotX) * 0.14;
-        dotY += (dotTargetY - dotY) * 0.14;
-        media.style.setProperty('--mx', x.toFixed(4));
-        media.style.setProperty('--my', y.toFixed(4));
-        if (dot) dot.style.transform = `translate3d(${dotX.toFixed(1)}px, ${dotY.toFixed(1)}px, 0)`;
-
-        const moving = Math.abs(targetX - x) > 0.001 || Math.abs(targetY - y) > 0.001
-          || Math.abs(dotTargetX - dotX) > 0.2 || Math.abs(dotTargetY - dotY) > 0.2;
-        frame = moving ? requestAnimationFrame(tick) : 0;
-      };
-      const kick = () => { if (!frame) frame = requestAnimationFrame(tick); };
-      const hideDot = () => { dotVisible = false; if (dot) dot.classList.remove('is-on'); };
-
-      hero.addEventListener('pointermove', (e) => {
-        if (e.pointerType !== 'mouse') return;
-        const h = hero.getBoundingClientRect();
-        targetX = Math.max(-1, Math.min(1, ((e.clientX - h.left) / h.width - 0.5) * 2));
-        targetY = Math.max(-1, Math.min(1, ((e.clientY - h.top) / h.height - 0.5) * 2));
-
-        if (dot) {
-          const m = media.getBoundingClientRect();
-          const inside = e.clientX >= m.left && e.clientX <= m.right && e.clientY >= m.top && e.clientY <= m.bottom;
-          if (inside) {
-            dotTargetX = e.clientX - m.left - 3;
-            dotTargetY = e.clientY - m.top - 3;
-            if (!dotVisible) { dotX = dotTargetX; dotY = dotTargetY; dotVisible = true; dot.classList.add('is-on'); }
-          } else if (dotVisible) {
-            hideDot();
-          }
-        }
-        kick();
-      });
-      hero.addEventListener('pointerleave', () => { targetX = 0; targetY = 0; hideDot(); kick(); });
-    }
+  // ---------- Autoplaying video becomes click-to-play for people who prefer less motion ----------
+  if (reducedMotion.matches) {
+    document.querySelectorAll('video[autoplay]').forEach((v) => { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
   }
 
   // ---------- Portfolio lightbox ----------

@@ -2,8 +2,6 @@
 
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-const SIZE = { '4/5': '1600×2000', '1/1': '1600×1600', '3/4': '1500×2000' };
-
 const ICON = {
   photo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6.5" width="18" height="13.5" rx="1"/><circle cx="12" cy="13.2" r="3.4"/><path d="M8.5 6.5 10 4h4l1.5 2.5"/></svg>',
   video: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M10 9.3v5.4l4.6-2.7z" fill="currentColor"/></svg>',
@@ -17,41 +15,21 @@ const placeholder = (path, kind, ratio, hint) =>
   `<div class="ph">${ICON[kind]}<span class="ph-kind">${kind === 'video' ? 'Video' : 'Photo'} · ${ratio.replace('/', ':')}</span><span class="ph-hint">${esc(hint)}</span><code class="ph-file">media/${path}.${kind === 'video' ? 'mp4' : 'jpg'}</code></div>`;
 
 // A photo slot: the real file when public/media/<path>.* exists, otherwise a labelled placeholder.
-function slot(ctx, { path, kind = 'photo', ratio = '4/5', hint = '', size, alt = '' }) {
-  const src = ctx.find(path, kind, { hint, size: size || SIZE[ratio] || '' });
+function slot(ctx, { path, ratio = '1/1', hint = '', size = '', alt = '', cls = '' }) {
+  const src = ctx.find(path, 'photo', { hint, size });
   const style = `--ratio:${ratio}`;
-  if (src && kind === 'photo') {
-    return `<figure class="slot" style="${style}"><img src="${ctx.base}${src}" alt="${esc(alt)}" loading="lazy" decoding="async"></figure>`;
+  if (src) {
+    return `<figure class="slot ${cls}" style="${style}"><img src="${ctx.base}${src}" alt="${esc(alt)}" loading="lazy" decoding="async"></figure>`;
   }
-  return `<figure class="slot slot--empty" style="${style}" aria-hidden="true">${placeholder(path, kind, ratio, hint)}</figure>`;
-}
-
-// Hero photograph. Nested layers keep the transforms apart:
-// figure = parallax, .hero-reveal = entrance mask, .hero-img = hover scale, img = entrance scale / breathing.
-function heroPhoto(ctx, { path, hint, size, alt, cls, priority }) {
-  // A hero slot takes a photo or a short muted video (hero.mp4).
-  const video = ctx.find(path, 'video', {}, false);
-  if (video) ctx.find(path, 'video', { hint, size }, true);
-  const src = video || ctx.find(path, 'photo', { hint, size });
-  let inner;
-  if (video) {
-    const poster = ctx.find(`${path}-poster`, 'photo', {}, false);
-    const type = video.endsWith('.webm') ? 'video/webm' : 'video/mp4';
-    inner = `<video autoplay muted loop playsinline preload="${priority ? 'auto' : 'metadata'}"${poster ? ` poster="${ctx.base}${poster}"` : ''} aria-label="${esc(alt)}"><source src="${ctx.base}${video}" type="${type}"></video>`;
-  } else if (src) {
-    inner = `<img src="${ctx.base}${src}" alt="${esc(alt)}" ${priority ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'} decoding="async">`;
-  } else {
-    inner = placeholder(path, 'photo', '4/5', hint);
-  }
-  return `<figure class="${cls}${src ? '' : ' is-empty'}"${src ? '' : ' aria-hidden="true"'}><div class="hero-reveal"><div class="hero-img">${inner}</div></div></figure>`;
+  return `<figure class="slot slot--empty ${cls}" style="${style}" aria-hidden="true">${placeholder(path, 'photo', ratio, hint)}</figure>`;
 }
 
 // One quadrant of the four-photo salon comparison.
 function quadCell(ctx, { path, cell, hint, alt }) {
-  const src = ctx.find(path, 'photo', { hint, size: '1600×2000' });
+  const src = ctx.find(path, 'photo', { hint, size: '1600×1600' });
   const inner = src
     ? `<img src="${ctx.base}${src}" alt="${esc(alt)}" loading="lazy" decoding="async">`
-    : placeholder(path, 'photo', '4/5', hint);
+    : placeholder(path, 'photo', '1/1', hint);
   return `<figure class="quad__cell quad__cell--${cell}${src ? '' : ' is-empty'}"${src ? '' : ' aria-hidden="true"'}>${inner}</figure>`;
 }
 
@@ -70,11 +48,17 @@ export function renderPage(ctx) {
   const addonPrice = (a) => (a.min === a.max ? `+${a.min}€` : `+${a.min}–${a.max}€`);
   const [qOpen, qClose] = t.quote;
 
-  const logo = ctx.find('logo', 'photo', { hint: 'Logo: SVG or transparent PNG', size: '2000px wide+', suggest: 'svg' });
-  const og = ctx.find('og-image', 'photo', { hint: 'Share preview for WhatsApp / Instagram / Google', size: '1200×630' });
-  const footerBrand = logo
-    ? `<img src="${base}${logo}" alt="${esc(site.name)}">`
-    : '<span class="logo-word">Shkurta</span><span class="logo-sub">Nails</span>';
+  const logoLight = ctx.find('logo-light', 'photo', { hint: 'Logo in white, transparent background', size: '1000px wide+' });
+  const logoDark = ctx.find('logo-dark', 'photo', { hint: 'Logo in black, transparent background', size: '1000px wide+' });
+  const heroWide = ctx.find(media.heroWide.path, 'photo', { hint: media.heroWide.hint, size: media.heroWide.size });
+  const heroTall = ctx.find(media.heroTall.path, 'photo', { hint: media.heroTall.hint, size: media.heroTall.size });
+  const clipVideo = ctx.find(media.clip.path, 'video', { hint: media.clip.hint, size: media.clip.size });
+  const clipPoster = ctx.find(`${media.clip.path}-poster`, 'photo', {}, false);
+  const ogFile = ctx.find('og-image', 'photo', { hint: 'Share preview (falls back to the hero photo)', size: '1200×630' }) || heroWide;
+
+  const brandMark = (logoDark || logoLight)
+    ? `${logoDark ? `<img class="brand__logo brand__logo--dark" src="${base}${logoDark}" alt="${esc(site.name)}" width="240" height="116">` : ''}${logoLight ? `<img class="brand__logo brand__logo--light" src="${base}${logoLight}" alt="${logoDark ? '' : esc(site.name)}"${logoDark ? ' aria-hidden="true"' : ''} width="240" height="116">` : ''}`
+    : `<span class="brand__text">${esc(site.name)}</span>`;
 
   const langLinks = site.languages
     .map((l) => `<a href="${hrefFor(l)}" hreflang="${l}" lang="${l}"${l === lang ? ' aria-current="true"' : ''}>${l.toUpperCase()}</a>`)
@@ -96,7 +80,7 @@ export function renderPage(ctx) {
     priceRange: '€',
     hasMap: site.mapsUrl,
     sameAs: [ig],
-    ...(og ? { image: `${site.url}/${og}` } : {}),
+    ...(ogFile ? { image: `${site.url}/${ogFile}` } : {}),
     address: { '@type': 'PostalAddress', streetAddress: site.address.street, addressLocality: site.address.city, addressCountry: site.address.country },
     openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: site.hours.days.map((d) => dayNames[d]), opens: site.hours.open, closes: site.hours.close }],
     makesOffer: services.map((sv) => ({ '@type': 'Offer', price: sv.price, priceCurrency: 'EUR', itemOffered: { '@type': 'Service', name: L(sv.name) } })),
@@ -112,7 +96,7 @@ export function renderPage(ctx) {
   const header = `
 <header class="site-header" data-header>
   <div class="site-header__inner">
-    <a class="brand" href="${home}">${logo ? `<img src="${base}${logo}" alt="${esc(site.name)}">` : esc(site.name)}</a>
+    <a class="brand" href="${home}" aria-label="${esc(site.name)}">${brandMark}</a>
     <nav class="site-nav" id="site-nav" aria-label="${esc(n.label)}">
       <ul>
         <li><a href="#services">${n.services}</a></li>
@@ -121,7 +105,7 @@ export function renderPage(ctx) {
         <li><a href="#faq">${n.faq}</a></li>
         <li><a href="#contact">${n.contact}</a></li>
       </ul>
-      <a class="nav-cta" href="${bookLink}" ${ext}>${n.book}</a>
+      <a class="pill pill--blush pill--sm" href="${bookLink}" ${ext}>${n.book}</a>
       <div class="site-nav__extra">
         <a href="tel:${site.phone}">${site.phoneDisplay}</a>
         <a href="${wa(site.whatsapp)}" ${ext}>WhatsApp</a>
@@ -139,29 +123,27 @@ export function renderPage(ctx) {
 </header>`;
 
   const h = t.hero;
+  const heroBg = heroWide || heroTall
+    ? `<picture class="hero__bg">
+      ${heroTall ? `<source media="(max-width: 767px)" srcset="${base}${heroTall}">` : ''}
+      <img src="${base}${heroWide || heroTall}" alt="${esc(h.alt)}" fetchpriority="high" decoding="async">
+    </picture>`
+    : `<div class="hero__bg hero__bg--empty">${placeholder(media.heroWide.path, 'photo', '2/1', media.heroWide.hint)}</div>`;
+
   const hero = `
 <section class="hero" id="top" aria-labelledby="hero-title" data-hero>
-  <div class="hero__bg" aria-hidden="true"></div>
-  <div class="hero__copy">
+  ${heroBg}
+  <span class="hero__scrim" aria-hidden="true"></span>
+  <div class="hero__inner">
     <p class="hero__eyebrow">${h.eyebrow}</p>
-    <h1 class="hero__title" id="hero-title" style="--title-scale:${h.titleScale || 1}">
-      <span class="hero__line"><span>${h.lines[0]}</span></span>
-      <span class="hero__line"><span>${h.lines[1]}</span></span>
-    </h1>
-    <span class="hero__rule" aria-hidden="true"></span>
+    <h1 class="hero__title" id="hero-title">${h.lines[0]}<em>${h.lines[1]}</em></h1>
     <p class="hero__sub">${h.sub}</p>
     <div class="hero__actions">
-      <a class="pill pill--solid" href="${bookLink}" ${ext}>${h.cta}</a>
-      <a class="pill pill--ghost" href="#work">${h.cta2}</a>
+      <a class="pill pill--blush" href="${bookLink}" ${ext}>${h.cta}</a>
+      <a class="pill pill--clear" href="#work">${h.cta2}</a>
     </div>
   </div>
-  <div class="hero__media" data-hero-media>
-    ${heroPhoto(ctx, { ...media.hero, alt: h.alt, cls: 'hero__main', priority: true })}
-    ${heroPhoto(ctx, { ...media.heroDetail, alt: h.detailAlt, cls: 'hero__detail' })}
-    <span class="hero__dot" aria-hidden="true" data-hero-dot></span>
-  </div>
-  <p class="hero__location"><span class="hero__tick" aria-hidden="true"></span>${h.location}</p>
-  <p class="hero__aside" aria-hidden="true">${h.aside}</p>
+  <a class="hero__scroll" href="#services"><span>${h.scroll}</span><i aria-hidden="true"></i></a>
 </section>`;
 
   const servicesSection = `
@@ -181,9 +163,27 @@ export function renderPage(ctx) {
   </div>
 </section>`;
 
+  const clipSection = `
+<section class="section section--sage" id="clip">
+  <div class="wrap clip-grid">
+    <div class="clip-media">
+      ${clipVideo
+        ? `<figure class="clip-video"><video autoplay muted loop playsinline preload="metadata"${clipPoster ? ` poster="${base}${clipPoster}"` : ''} aria-label="${esc(t.clip.alt)}"><source src="${base}${clipVideo}" type="video/${clipVideo.endsWith('.webm') ? 'webm' : 'mp4'}"></video></figure>`
+        : `<figure class="clip-video slot--empty" aria-hidden="true">${placeholder(media.clip.path, 'video', '4/5', media.clip.hint)}</figure>`}
+      ${s({ path: media.clipStill.path, ratio: '4/5', hint: media.clipStill.hint, size: media.clipStill.size, alt: t.clip.stillAlt, cls: 'clip-still' })}
+    </div>
+    <div class="clip-text">
+      <p class="label">${t.clip.eyebrow}</p>
+      <h2 class="title">${t.clip.title}</h2>
+      <p class="intro">${t.clip.sub}</p>
+      <a class="pill pill--ink" href="${bookLink}" ${ext}>${t.clip.cta}</a>
+    </div>
+  </div>
+</section>`;
+
   const gallery = media.portfolio.map((p) => {
     const real = ctx.find(p.path, 'photo', {}, false);
-    const inner = s({ path: p.path, ratio: p.ratio, hint: p.hint, alt: t.work.alt });
+    const inner = s({ path: p.path, ratio: '1/1', hint: p.hint, size: '1600×1600', alt: t.work.alt });
     return real
       ? `<button type="button" class="shot" data-src="${base}${real}" aria-label="${esc(t.work.open)}">${inner}</button>`
       : `<div class="shot">${inner}</div>`;
@@ -206,7 +206,7 @@ export function renderPage(ctx) {
 </section>`;
 
   const aboutSection = `
-<section class="section section--tint" id="about">
+<section class="section section--sage" id="about">
   <div class="wrap about-grid">
     <div class="about-media">
       <div class="quad" data-quad style="--qx:50%; --qy:50%">
@@ -226,7 +226,7 @@ export function renderPage(ctx) {
 </section>`;
 
   const reviewsSection = `
-<section class="section" id="reviews">
+<section class="section section--deep" id="reviews">
   <div class="wrap">
     <header class="section-head">
       <p class="label">${t.reviews.eyebrow}</p>
@@ -239,7 +239,7 @@ export function renderPage(ctx) {
 </section>`;
 
   const faqSection = `
-<section class="section section--tint" id="faq">
+<section class="section" id="faq">
   <div class="wrap faq-grid">
     <header class="section-head">
       <p class="label">${t.faq.eyebrow}</p>
@@ -261,8 +261,8 @@ export function renderPage(ctx) {
       <h2 class="title">${c.title}</h2>
       <p class="intro">${c.sub}</p>
       <div class="actions">
-        <a class="btn btn--light" href="${bookLink}" ${ext}>WhatsApp</a>
-        <a class="btn btn--line-light" href="${ig}" ${ext}>Instagram</a>
+        <a class="pill pill--blush" href="${bookLink}" ${ext}>WhatsApp</a>
+        <a class="pill pill--clear" href="${ig}" ${ext}>Instagram</a>
       </div>
     </div>
     <div>
@@ -281,7 +281,7 @@ export function renderPage(ctx) {
   const footer = `
 <footer class="footer">
   <div class="wrap footer-inner">
-    <a class="logo" href="${home}" aria-label="${esc(site.name)}">${footerBrand}</a>
+    <a class="brand brand--footer" href="${home}" aria-label="${esc(site.name)}">${logoDark ? `<img class="brand__logo" src="${base}${logoDark}" alt="${esc(site.name)}" width="240" height="116">` : `<span class="brand__text">${esc(site.name)}</span>`}</a>
     <nav class="langs" aria-label="${esc(t.footer.langs)}">${langLinks}</nav>
     <a class="to-top" href="#top">${t.footer.top}</a>
   </div>
@@ -313,14 +313,16 @@ ${alternates}
 <meta property="og:description" content="${esc(t.meta.description)}">
 <meta property="og:url" content="${pageUrl}">
 <meta property="og:locale" content="${t.ogLocale}">
-${og ? `<meta property="og:image" content="${site.url}/${og}">\n<meta name="twitter:card" content="summary_large_image">` : '<!-- Add public/media/og-image.jpg (1200×630) for link previews -->'}
-<meta name="theme-color" content="#F7F1EA" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#141110" media="(prefers-color-scheme: dark)">
+${ogFile ? `<meta property="og:image" content="${site.url}/${ogFile}">\n<meta name="twitter:card" content="summary_large_image">` : ''}
+<meta name="theme-color" content="#F1EDE5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141612" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="${base}favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800;900&family=Jost:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Jost:wght@400;500&display=swap">
 <link rel="stylesheet" href="${base}styles.css">
+${heroWide ? `<link rel="preload" as="image" href="${base}${heroWide}" media="(min-width: 768px)">` : ''}
+${heroTall ? `<link rel="preload" as="image" href="${base}${heroTall}" media="(max-width: 767px)">` : ''}
 <script type="application/ld+json">${jsonLd}</script>
 <script type="application/ld+json">${faqLd}</script>
 <script src="${base}app.js" defer></script>
@@ -331,6 +333,7 @@ ${header}
 <main id="main">
 ${hero}
 ${servicesSection}
+${clipSection}
 ${workSection}
 ${aboutSection}
 ${reviewsSection}
