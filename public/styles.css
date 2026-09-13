@@ -31,7 +31,7 @@
   --wrap: 1240px;
   --gutter: clamp(20px, 5vw, 48px);
   --edge: clamp(20px, 5vw, 80px);
-  --header-h: 78px;
+  --header-h: 88px;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -168,7 +168,7 @@ a { color: inherit; }
 .site-header__inner { display: flex; align-items: center; justify-content: space-between; gap: 20px; height: var(--header-h); padding-inline: var(--edge); }
 
 .brand { position: relative; z-index: 2; display: inline-flex; align-items: center; text-decoration: none; color: inherit; }
-.brand__logo { width: auto; height: clamp(30px, 3.4vw, 38px); }
+.brand__logo { width: auto; height: clamp(42px, 4.8vw, 58px); }
 .brand__text { font-family: var(--serif); font-style: italic; font-size: 24px; }
 .brand__logo--dark { display: none; }
 .site-header.is-scrolled .brand__logo--light,
@@ -450,9 +450,26 @@ button.shot:hover img { transform: scale(1.04); }
 
 /* ---------- Xovah Web credit ---------- */
 .pill svg { width: 17px; height: 17px; flex: none; }
-.contact-credit { margin-top: 28px; font-size: 13px; color: var(--on-dark-muted); }
+.footer-made {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 6px 12px;
+  margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line);
+  text-align: center; font-size: 15px; color: var(--muted);
+}
+.credit--big {
+  font-family: var(--serif); font-size: clamp(21px, 2.2vw, 30px); line-height: 1.1;
+  color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--blush); padding-bottom: 3px;
+  transition: color .3s var(--ease-out), border-color .3s var(--ease-out);
+}
+.credit--big:hover { color: var(--sage); border-color: var(--sage); }
+.footer-made__url { width: 100%; margin-top: 2px; font-size: 11.5px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase; }
+.footer-made__url a { color: var(--muted); text-decoration: none; }
+.footer-made__url a:hover { color: var(--ink); }
+.contact-credit { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; margin-top: 32px; font-size: 15px; color: var(--on-dark-muted); }
+.contact-credit .credit--big { color: var(--on-dark); border-color: var(--blush); font-size: clamp(19px, 1.9vw, 24px); }
+.contact-credit .credit--big:hover { color: var(--blush); border-color: var(--on-dark); }
 .footer-credit { font-weight: 500; }
-.site-nav__credit { margin-top: 6px; font-size: 13px; color: var(--muted); }
+.site-nav__credit { margin-top: 10px; font-size: 14px; color: var(--muted); }
+.site-nav__credit .credit--big { font-size: 21px; }
 .link-plain { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
 .link-plain:hover { color: var(--ink); }
 
@@ -501,7 +518,7 @@ button.shot:hover img { transform: scale(1.04); }
 /* ---------- Footer ---------- */
 .footer { padding: 44px 0 32px; border-top: 1px solid var(--line); }
 .footer-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 18px 40px; }
-.brand--footer .brand__logo { height: 40px; display: block; }
+.brand--footer .brand__logo { height: clamp(58px, 7vw, 86px); display: block; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .brand--footer .brand__logo { filter: invert(1); }
 }
@@ -562,3 +579,17 @@ button.shot:hover img { transform: scale(1.04); }
 
 .pill--line { border-color: var(--line); color: var(--ink); }
 .pill--line:hover { background: var(--tint); border-color: var(--ink); transform: translateY(-2px); }
+
+/* ---------- Xovah Web credit ---------- */
+.footer-made {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 6px 12px;
+  margin-top: 30px; padding-top: 26px; border-top: 1px solid var(--line);
+  text-align: center; font-size: 15px; color: var(--muted);
+}
+.credit--big {
+  font-family: var(--serif); font-size: clamp(21px, 2.2vw, 30px); line-height: 1.1;
+  color: var(--ink); text-decoration: none; border-bottom: 2px solid var(--blush); padding-bottom: 3px;
+  transition: color .3s var(--ease-out), border-color .3s var(--ease-out);
+}
+.credit--big:hover { color: var(--sage); border-color: var(--sage); }
+.footer-made__url { width: 100

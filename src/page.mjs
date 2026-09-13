@@ -115,7 +115,7 @@ export function renderPage(ctx) {
         <a href="tel:${site.phone}">${site.phoneDisplay}</a>
         <a href="${site.mapsUrl}" ${ext}>${t.contact.maps}</a>
         <div class="site-nav__langs">${langLinks}</div>
-        <p class="site-nav__credit">${t.footer.credit} ${creditLink}</p>
+        <p class="site-nav__credit">${t.footer.madeBy} <a class="credit credit--big" href="${site.credit.url}" ${ext}>${site.credit.name}</a></p>
       </div>
     </nav>
     <div class="header-tools">
@@ -276,7 +276,7 @@ export function renderPage(ctx) {
         <a class="pill pill--blush" href="${bookLink}" ${ext}>${ICON.instagram}<span>Instagram</span></a>
         <a class="pill pill--clear" href="${wa(site.whatsapp)}" ${ext}>WhatsApp</a>
       </div>
-      <p class="contact-credit">${t.footer.credit} ${creditLink}</p>
+      <p class="contact-credit"><span>${t.footer.madeBy}</span> <a class="credit credit--big" href="${site.credit.url}" ${ext}>${site.credit.name}</a></p>
     </div>
     <div>
       <dl class="details">
@@ -297,6 +297,11 @@ export function renderPage(ctx) {
     <a class="brand brand--footer" href="${home}" aria-label="${esc(site.name)}">${logoDark ? `<img class="brand__logo" src="${base}${logoDark}" alt="${esc(site.name)}" width="240" height="116">` : `<span class="brand__text">${esc(site.name)}</span>`}</a>
     <nav class="langs" aria-label="${esc(t.footer.langs)}">${langLinks}</nav>
     <a class="to-top" href="#top">${t.footer.top}</a>
+  </div>
+  <div class="wrap footer-made">
+    <span>${t.footer.madeBy}</span>
+    <a class="credit credit--big" href="${site.credit.url}" ${ext}>${site.credit.name}</a>
+    <span class="footer-made__url"><a href="${site.credit.url}" ${ext}>${site.credit.domain}</a></span>
   </div>
   <div class="wrap footer-meta">
     <span>© ${year} ${site.name} · <a class="link-plain" href="${site.mapsUrl}" ${ext}>${c.city}</a></span>
