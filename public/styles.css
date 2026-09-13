@@ -5,7 +5,7 @@
 
   --bg: #F2EEE6;
   --tint: #E5E8DC;
-  --deep: #6E8A6A;
+  --deep: #4A6247;
   --dark: #23261F;
   --ink: #2B2A26;
   --ink-2: #4A4842;
@@ -16,7 +16,8 @@
   --blush-deep: #C69183;
 
   --on-dark: #F2EEE6;
-  --on-dark-muted: #B6B8A8;
+  --on-dark-muted: #D6D3C8;
+  --blush-on-dark: #EBC7BC;
   --line-dark: rgba(242, 238, 230, .18);
 
   --header-rgb: 242, 238, 230;
@@ -429,15 +430,31 @@ button.shot:hover img { transform: scale(1.04); }
   .quad__cell .ph-file { display: none; }
 }
 
-/* ---------- Reviews ---------- */
-.reviews { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); }
-.review { display: flex; flex-direction: column; gap: 20px; padding-top: 24px; border-top: 1px solid var(--line-dark); }
-.review blockquote { flex: 1; font-family: var(--serif); font-style: italic; font-size: clamp(19px, 1.6vw, 23px); line-height: 1.5; }
-.review figcaption { font-size: 11.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--on-dark-muted); }
+/* ---------- Team ---------- */
+.team-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 4vw, 56px); }
+.member { display: flex; flex-direction: column; gap: 10px; padding-top: 24px; border-top: 1px solid var(--line-dark); }
+.member__name { font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 2.2vw, 32px); line-height: 1.1; }
+.member__role { font-size: 11.5px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: var(--blush-on-dark); }
+.member__bio { margin-top: 4px; font-size: 16px; line-height: 1.65; color: var(--on-dark-muted); }
+.member__link {
+  display: inline-flex; align-items: center; gap: 9px; margin-top: 6px;
+  font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; text-decoration: none;
+}
+.member__link svg { width: 17px; height: 17px; }
+.member__link span { border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+.member__link:hover { color: var(--blush); }
 
 @media (max-width: 860px) {
-  .reviews { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .team-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
 }
+
+/* ---------- Xovah Web credit ---------- */
+.pill svg { width: 17px; height: 17px; flex: none; }
+.contact-credit { margin-top: 28px; font-size: 13px; color: var(--on-dark-muted); }
+.footer-credit { font-weight: 500; }
+.site-nav__credit { margin-top: 6px; font-size: 13px; color: var(--muted); }
+.link-plain { text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line); }
+.link-plain:hover { color: var(--ink); }
 
 /* ---------- FAQ ---------- */
 .faq-grid { display: grid; grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr); gap: clamp(32px, 7vw, 120px); align-items: start; }
