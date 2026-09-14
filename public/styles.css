@@ -615,3 +615,79 @@ button.shot:hover img { transform: scale(1.04); }
 }
 :root[data-theme="dark"] ::selection { background: #4A6D45; color: #F2EEE6; }
 :root[data-theme="dark"] ::-moz-selection { background: #4A6D45; color: #F2EEE6; }
+
+/* ---------- Scroll animations ----------
+   Driven by the scroll position itself (animation-timeline), so there is no
+   JavaScript to fail and nothing can stay stuck invisible: browsers without
+   support simply show everything. Disabled for reduced-motion. */
+@keyframes reveal-up { from { opacity: 0; transform: translateY(34px); } to { opacity: 1; transform: none; } }
+@keyframes reveal-left { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+@keyframes reveal-right { from { opacity: 0; transform: translateX(28px); } to { opacity: 1; transform: none; } }
+@keyframes reveal-zoom { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
+@keyframes drift-up { from { transform: translateY(26px); } to { transform: translateY(-26px); } }
+@keyframes photo-pan { from { transform: scale(1.12) translateY(2%); } to { transform: scale(1.12) translateY(-2%); } }
+@keyframes progress-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes cue-pulse { 0%, 100% { transform: scaleY(.45); opacity: .5; } 50% { transform: scaleY(1); opacity: .9; } }
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    /* Headings and text blocks rise as they come into view */
+    .section-head > *, .addons, .ig-line, .story, .quad__hint,
+    .clip-text > *, .about-text > *, .faq details, .details div, .direct,
+    .contact-credit, .footer-inner, .footer-made {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 4% cover 20%;
+    }
+
+    /* Price rows cascade one after another */
+    .prices li {
+      animation: reveal-left linear both;
+      animation-timeline: view();
+      animation-range: entry 2% cover 18%;
+    }
+
+    /* Portfolio tiles, each as it arrives, with a slight stagger per column */
+    .masonry .shot {
+      animation: reveal-zoom linear both;
+      animation-timeline: view();
+      animation-range: entry 2% cover 22%;
+    }
+    .masonry .shot:nth-child(3n + 2) { animation-range: entry 8% cover 28%; }
+    .masonry .shot:nth-child(3n) { animation-range: entry 12% cover 32%; }
+
+    /* Team cards */
+    .member { animation: reveal-up linear both; animation-timeline: view(); animation-range: entry 4% cover 22%; }
+    .member:nth-child(2) { animation-range: entry 10% cover 28%; }
+    .member:nth-child(3) { animation-range: entry 16% cover 34%; }
+
+    /* Big media blocks come in from their own side */
+    .clip-media { animation: reveal-left linear both; animation-timeline: view(); animation-range: entry 2% cover 24%; }
+    .about-media { animation: reveal-right linear both; animation-timeline: view(); animation-range: entry 2% cover 24%; }
+    .faq-photos { animation: reveal-zoom linear both; animation-timeline: view(); animation-range: entry 2% cover 24%; }
+
+    /* Photos drift gently while they travel up the screen */
+    .masonry .slot img, .faq-photos img, .clip-still img {
+      animation: drift-up linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+    .section__bg img {
+      animation: photo-pan linear both;
+      animation-timeline: view();
+      animation-range: cover 0% cover 100%;
+    }
+
+    /* The scroll cue breathes */
+    .hero__scroll i { animation: cue-pulse 2.6s ease-in-out infinite; transform-origin: top; }
+
+    /* Thin reading-progress bar along the top of the page */
+    body::after {
+      content: "";
+      position: fixed; inset: 0 0 auto; height: 3px; z-index: 50;
+      background: var(--sage); transform-origin: left; transform: scaleX(0);
+      animation: progress-bar linear both;
+      animation-timeline: scroll(root block);
+    }
+  }
+}

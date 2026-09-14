@@ -8,3 +8,5 @@ Thumbs.db
 
 # Original photo drops
 gallery/
+
+.build-lock/

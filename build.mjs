@@ -1,6 +1,6 @@
 // Builds the static site into dist/: one page per language, sitemap, robots.txt,
 // and MEDIA-CHECKLIST.md listing every photo/video slot and whether it's filled.
-import { cpSync, existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -14,7 +14,32 @@ const EXTENSIONS = {
   video: ['mp4', 'webm'],
 };
 
+// Only one build at a time: `npm run build` in one terminal and the dev server's
+// own rebuild both empty dist/ first, and running together left it half written.
+const lockDir = join(root, '.build-lock');
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export async function build() {
+  for (let attempt = 0; attempt < 100; attempt++) {
+    try {
+      mkdirSync(lockDir);
+      break;
+    } catch (err) {
+      // Clear a lock left behind by a crashed build.
+      try {
+        if (Date.now() - statSync(lockDir).mtimeMs > 30000) rmSync(lockDir, { recursive: true, force: true });
+      } catch (e) { /* gone already */ }
+      await sleep(100);
+    }
+  }
+  try {
+    return await buildOnce();
+  } finally {
+    rmSync(lockDir, { recursive: true, force: true });
+  }
+}
+
+async function buildOnce() {
   // Query string busts the ESM cache so watch mode picks up edits.
   const v = Date.now();
   const content = await import(`${pathToFileURL(join(root, 'src/content.mjs')).href}?v=${v}`);
