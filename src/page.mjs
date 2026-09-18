@@ -71,27 +71,81 @@ export function renderPage(ctx) {
   ].join('\n');
 
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+  // The logo-dark file is the branded icon Google uses in search / Knowledge Panel.
+  const logoDarkFile = ctx.find('logo-dark', 'photo', {}, false);
+
   const jsonLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'NailSalon',
     name: site.name,
     url: pageUrl,
+    description: t.meta.description,
     telephone: site.phone,
     foundingDate: String(site.founded),
     priceRange: '€',
+    currenciesAccepted: 'EUR',
+    paymentAccepted: 'Cash, Credit Card',
     hasMap: site.mapsUrl,
     sameAs: [ig, ...team.map((m) => igProfile(m.instagram))],
+    ...(logoDarkFile ? {
+      logo: {
+        '@type': 'ImageObject',
+        url: `${site.url}/${logoDarkFile}`,
+        width: 981,
+        height: 475,
+      },
+    } : {}),
     ...(ogFile ? { image: `${site.url}/${ogFile}` } : {}),
-    address: { '@type': 'PostalAddress', streetAddress: site.address.street, addressLocality: site.address.city, addressCountry: site.address.country },
-    openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: site.hours.days.map((d) => dayNames[d]), opens: site.hours.open, closes: site.hours.close }],
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: site.address.street,
+      addressLocality: site.address.city,
+      addressCountry: site.address.country,
+    },
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: 42.9108,
+      longitude: 21.1896,
+    },
+    areaServed: {
+      '@type': 'City',
+      name: 'Podujevë',
+    },
+    openingHoursSpecification: [{
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: site.hours.days.map((d) => dayNames[d]),
+      opens: site.hours.open,
+      closes: site.hours.close,
+    }],
     employee: team.map((m) => ({ '@type': 'Person', name: m.name, jobTitle: L(m.role) })),
-    makesOffer: services.map((sv) => ({ '@type': 'Offer', price: sv.price, priceCurrency: 'EUR', itemOffered: { '@type': 'Service', name: L(sv.name) } })),
+    makesOffer: services.map((sv) => ({
+      '@type': 'Offer',
+      price: sv.price,
+      priceCurrency: 'EUR',
+      itemOffered: { '@type': 'Service', name: L(sv.name) },
+    })),
   }).replace(/</g, '\\u003c');
 
   const faqLd = JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
     mainEntity: t.faq.items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  }).replace(/</g, '\\u003c');
+
+  // WebSite schema — enables Google's sitelinks search box eligibility.
+  const websiteLd = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: site.name,
+    url: site.url,
+    description: t.meta.description,
+    ...(logoDarkFile ? { image: `${site.url}/${logoDarkFile}` } : {}),
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: { '@type': 'EntryPoint', urlTemplate: `${site.url}/?s={search_term_string}` },
+      'query-input': 'required name=search_term_string',
+    },
   }).replace(/</g, '\\u003c');
 
   const n = t.nav;
@@ -346,10 +400,25 @@ ${alternates}
 <meta property="og:description" content="${esc(t.meta.description)}">
 <meta property="og:url" content="${pageUrl}">
 <meta property="og:locale" content="${t.ogLocale}">
-${ogFile ? `<meta property="og:image" content="${site.url}/${ogFile}">\n<meta name="twitter:card" content="summary_large_image">` : ''}
+${ogFile ? `<meta property="og:image" content="${site.url}/${ogFile}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${esc(site.name)} — ${esc(site.address.city)}, ${esc(site.address.country)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${esc(t.meta.title)}">
+<meta name="twitter:description" content="${esc(t.meta.description)}">
+<meta name="twitter:image" content="${site.url}/${ogFile}">` : ''}
+<meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+${t.meta.keywords ? `<meta name="keywords" content="${esc(t.meta.keywords)}">` : ''}
+<meta name="geo.region" content="${site.address.country}">
+<meta name="geo.placename" content="${site.address.city}">
+<meta name="geo.position" content="42.9108;21.1896">
+<meta name="ICBM" content="42.9108, 21.1896">
 <meta name="theme-color" content="#F2EEE6" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#141612" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="${base}favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="${base}apple-touch-icon.png">
+<link rel="manifest" href="${base}manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..600;1,6..96,400..600&family=Jost:wght@400;500&display=swap">
@@ -358,6 +427,7 @@ ${heroWide ? `<link rel="preload" as="image" href="${base}${heroWide}" media="(m
 ${heroTall ? `<link rel="preload" as="image" href="${base}${heroTall}" media="(max-width: 767px)">` : ''}
 <script type="application/ld+json">${jsonLd}</script>
 <script type="application/ld+json">${faqLd}</script>
+<script type="application/ld+json">${websiteLd}</script>
 <script src="${base}app.js" defer></script>
 </head>
 <body>

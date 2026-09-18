@@ -1,0 +1,14 @@
+{
+  "name": "Shkurta Nails",
+  "short_name": "Shkurta Nails",
+  "description": "Sallon thonjsh premium në Podujevë, Kosovë. Manikyr, pedikyr, zgjatje me xhel.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F2EEE6",
+  "theme_color": "#F2EEE6",
+  "lang": "sq",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

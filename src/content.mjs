@@ -109,8 +109,9 @@ export const strings = {
   sq: {
     htmlLang: 'sq', ogLocale: 'sq_AL',
     meta: {
-      title: 'Shkurta Nails · Sallon thonjsh në Podujevë',
-      description: 'Manikyr, pedikyr, zgjatje me xhel, chrome, French dhe ombré në Podujevë. Rezervo në Instagram ose WhatsApp.',
+      title: 'Shkurta Nails — Sallon Thonjsh Podujevë | Manikyr, Pedikyr & Zgjatje',
+      description: 'Sallon thonjsh premium në Podujevë, Kosovë. Manikyr, pedikyr, zgjatje me xhel, chrome, French dhe ombré. Çmime nga 13€. Rezervo terminin tënd tani në Instagram.',
+      keywords: 'sallon thonjsh Podujevë, manikyr Kosovë, pedikyr, zgjatje me xhel, nail art, chrome, French, ombré, Shkurta Nails',
     },
     skip: 'Kalo te përmbajtja',
     nav: {
@@ -169,8 +170,9 @@ export const strings = {
   en: {
     htmlLang: 'en', ogLocale: 'en_GB',
     meta: {
-      title: 'Shkurta Nails · Nail salon in Podujevo',
-      description: 'Manicure, pedicure, gel extensions, chrome, French and ombré nails in Podujevo, Kosovo. Book on Instagram or WhatsApp.',
+      title: 'Shkurta Nails — Nail Salon Podujevo, Kosovo | Manicure, Pedicure & Gel',
+      description: 'Premium nail salon in Podujevo, Kosovo. Manicure, pedicure, gel extensions, chrome, French and ombré nails from €13. Book your appointment on Instagram.',
+      keywords: 'nail salon Podujevo, manicure Kosovo, pedicure, gel extensions, nail art, chrome nails, French nails, ombré, Shkurta Nails',
     },
     skip: 'Skip to content',
     nav: {
@@ -229,8 +231,9 @@ export const strings = {
   de: {
     htmlLang: 'de', ogLocale: 'de_DE',
     meta: {
-      title: 'Shkurta Nails · Nagelstudio in Podujevo',
-      description: 'Maniküre, Pediküre, Gel-Verlängerung, Chrome, French und Ombré in Podujevo, Kosovo. Termin per Instagram oder WhatsApp.',
+      title: 'Shkurta Nails — Nagelstudio Podujevo, Kosovo | Maniküre, Pediküre & Gel',
+      description: 'Premium-Nagelstudio in Podujevo, Kosovo. Maniküre, Pediküre, Gel-Verlängerung, Chrome, French & Ombré ab 13€. Termin auf Instagram buchen.',
+      keywords: 'Nagelstudio Podujevo, Maniküre Kosovo, Pediküre, Gel-Verlängerung, Nail Art, Chrome Nägel, French, Ombré, Shkurta Nails',
     },
     skip: 'Zum Inhalt springen',
     nav: {
