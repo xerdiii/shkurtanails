@@ -1,0 +1,11 @@
+{
+  "name": "shkurta-nails",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Shkurta Nails website: static, three languages, no dependencies.",
+  "scripts": {
+    "dev": "node serve.mjs",
+    "build": "node build.mjs"
+  }
+}
